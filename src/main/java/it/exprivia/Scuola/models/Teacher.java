@@ -1,9 +1,17 @@
 package it.exprivia.Scuola.models;
 
 import it.exprivia.Scuola.models.abstracts.Person;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity
 public class Teacher extends Person {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	private String teacherSub;
 
 	// costruttore vuoto
@@ -19,6 +27,10 @@ public class Teacher extends Person {
 	}
 
 	// getters and setters
+
+	public Integer getId() {
+		return this.id;
+	}
 
 	public String getTeacherSub() {
 		return teacherSub;

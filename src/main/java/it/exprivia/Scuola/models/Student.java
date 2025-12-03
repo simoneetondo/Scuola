@@ -3,10 +3,17 @@ package it.exprivia.Scuola.models;
 import java.sql.Date;
 
 import it.exprivia.Scuola.models.abstracts.Person;
-import it.exprivia.Scuola.services.IStudent;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-public class Student extends Person implements IStudent{
+@Entity
+public class Student extends Person {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	private String stuNum;
 	private Date dateBr;
 
@@ -36,6 +43,10 @@ public class Student extends Person implements IStudent{
 
 	public void setDateBr(Date dateBr) {
 		this.dateBr = dateBr;
+	}
+
+	public Integer getId() {
+		return id;
 	}
 
 	// to string che include gli attributi della superclase e fa sempre comodo

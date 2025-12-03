@@ -1,0 +1,32 @@
+GET http://127.0.0.1:8080/api/students
+
+###
+
+GET http://127.0.0.1:8080/api/students/1
+
+###
+
+POST http://127.0.0.1:8080/api/students
+Content-Type: application/json
+
+{
+    "firstName": "Flavio",
+    "lastName": "Stincone",
+    "stuNum": "3297166198",
+    "dateBr": "2025-06-10"
+}
+
+###
+PUT http://127.0.0.1:8080/api/students/2
+Content-Type: application/json
+
+{
+    "firstName": "Simone",
+    "lastName": "Tundo",
+    "stuNum": "355122344",
+    "dateBr": "2025-06-10"
+}
+
+###
+
+DELETE http://127.0.0.1:8080/api/students/1

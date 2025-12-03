@@ -1,18 +1,17 @@
 package it.exprivia.Scuola.models.abstracts;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
+@MappedSuperclass
 public abstract class Person {
 	// mettendo protected i figli che ereditano vedono gli attributi e non sono
 	// visibili solo a questa
 	// classe
-	protected Integer id;
 	protected String firstName;
 	protected String lastName;
 
 	// consturctors
-	
+
 	public Person() {
 
 	}
@@ -21,16 +20,8 @@ public abstract class Person {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
-	
-	// getters and setters
-	
-	public Integer getId() {
-		return id;
-	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	// getters and setters
 
 	public String getFirstName() {
 		return firstName;
@@ -47,14 +38,12 @@ public abstract class Person {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	 
+
 	// to string
-	
+
 	@Override
 	public String toString() {
 		return "Person [firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
 
-	
-	
 }

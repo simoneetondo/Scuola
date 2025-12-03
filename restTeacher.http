@@ -1,0 +1,19 @@
+GET http://127.0.0.1:8080/api/teachers
+ 
+
+###
+
+GET http://127.0.0.1:8080/api/teacher/2
+
+
+###
+
+POST http://127.0.0.1:8080/api/teachers
+Content-Type: application/json
+
+{
+    "firstName": "Lucia",
+    "lastName": "Tundo",
+    "teacherSub": "Matematica"
+}
+
