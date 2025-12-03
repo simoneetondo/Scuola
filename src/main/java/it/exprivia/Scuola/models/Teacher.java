@@ -1,39 +1,38 @@
-package it.exprivia.progetto.models;
+package it.exprivia.Scuola.models;
 
-import it.exprivia.progetto.models.abstracts.Person;
+import it.exprivia.Scuola.models.abstracts.Person;
 
 public class Teacher extends Person {
 
-    private String teacherSub;
+	private String teacherSub;
 
-    // costruttore vuoto
+	// costruttore vuoto
 
-    public Teacher() {
-        super();
-    }
+	public Teacher() {
+		super();
+	}
 
-    // costruttore con param
+	// costruttore con param
 
-    public Teacher(String firstName, String lastName) {
-        super(firstName, lastName);
-        this.teacherSub = teacherSub;
-    }
+	public Teacher(String firstName, String lastName) {
+		super(firstName, lastName);
+	}
 
-    // getters and setters
+	// getters and setters
 
-    public String getTeacherSub() {
-        return teacherSub;
-    }
+	public String getTeacherSub() {
+		return teacherSub;
+	}
 
-    public void setTeacherSub(String teacherSub) {
-        this.teacherSub = teacherSub;
-    }
-    
-    // to string che include gli attributi della superclase e fa sempre comodo
-    
-    @Override
-    public String toString() {
-        return "Teacher [teacherSub=" + teacherSub + ", firstName=" + firstName + ", lastName=" + lastName + "]";
-    }
+	public void setTeacherSub(String teacherSub) {
+		this.teacherSub = teacherSub;
+	}
+
+	// to string che include gli attributi della superclase e fa sempre comodo
+
+	@Override
+	public String toString() {
+		return "Teacher [teacherSub=" + teacherSub + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+	}
 
 }

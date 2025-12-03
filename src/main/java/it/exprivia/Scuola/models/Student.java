@@ -1,51 +1,49 @@
-package it.exprivia.progetto.models;
+package it.exprivia.Scuola.models;
 
 import java.sql.Date;
 
-import it.exprivia.progetto.models.abstracts.Person;
+import it.exprivia.Scuola.models.abstracts.Person;
+import it.exprivia.Scuola.services.IStudent;
 
-public class Student extends Person {
+public class Student extends Person implements IStudent{
 
-    private String stuNum;
-    private Date dateBr;
+	private String stuNum;
+	private Date dateBr;
 
-    // costruttore vuoto 
+	// costruttore vuoto
 	public Student() {
 		super();
 	}
 
-    // costruttore con param
+	// costruttore con param
 	public Student(String firstName, String lastName) {
 		super(firstName, lastName);
-        this.stuNum = stuNum;
-        this.dateBr = dateBr;
 	}
 
-    // getters and setters
+	// getters and setters
 
-    public String getStuNum() {
-        return stuNum;
-    }
+	public String getStuNum() {
+		return stuNum;
+	}
 
-    public void setStuNum(String stuNum) {
-        this.stuNum = stuNum;
-    }
+	public void setStuNum(String stuNum) {
+		this.stuNum = stuNum;
+	}
 
-    public Date getDateBr() {
-        return dateBr;
-    }
+	public Date getDateBr() {
+		return dateBr;
+	}
 
-    public void setDateBr(Date dateBr) {
-        this.dateBr = dateBr;
-    }
+	public void setDateBr(Date dateBr) {
+		this.dateBr = dateBr;
+	}
 
-    // to string che include gli attributi della superclase e fa sempre comodo
+	// to string che include gli attributi della superclase e fa sempre comodo
 
-    @Override
-    public String toString() {
-        return "Student [stuNum=" + stuNum + ", dateBr=" + dateBr + ", firstName=" + firstName + ", lastName="
-                + lastName + "]";
-    }
+	@Override
+	public String toString() {
+		return "Student [stuNum=" + stuNum + ", dateBr=" + dateBr + ", firstName=" + firstName + ", lastName="
+				+ lastName + "]";
+	}
 
-    
 }
