@@ -75,7 +75,7 @@ public class StudentServiceImpl implements IStudent {
 	@Override
 	public StudentDTO updateStudent(Integer id, StudentDTO newStudent) {
 		Optional<Student> student = repo.findById(id);
-
+		
 		if (student.isPresent()) {
 			Student updatedStudent = student.get();
 			updatedStudent.setFirstName(newStudent.getFirstName());

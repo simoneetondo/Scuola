@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.exprivia.Scuola.models.dto.StudentDTO;
-import it.exprivia.Scuola.models.entity.Student;
 import it.exprivia.Scuola.services.impl.StudentServiceImpl;
 
 @RestController

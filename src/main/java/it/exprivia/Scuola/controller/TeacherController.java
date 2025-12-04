@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.exprivia.Scuola.models.entity.Teacher;
+import it.exprivia.Scuola.models.dto.TeacherDTO;
 import it.exprivia.Scuola.services.impl.TeacherServiceImpl;
 
 @RestController
@@ -25,8 +25,8 @@ public class TeacherController {
     private TeacherServiceImpl service;
 
     @GetMapping("")
-    public ResponseEntity<List<Teacher>> getAllTeachers() {
-        List<Teacher> teachers = service.getAllTeachers();
+    public ResponseEntity<List<TeacherDTO>> getAllTeachers() {
+        List<TeacherDTO> teachers = service.getAllTeachers();
         if (teachers == null || teachers.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -34,29 +34,29 @@ public class TeacherController {
     }
 
     @GetMapping("/{varId}")
-    public ResponseEntity<Teacher> getTeacher(@PathVariable Integer varId) {
-        Teacher teach = service.getTeacher(varId);
+    public ResponseEntity<TeacherDTO> getTeacher(@PathVariable Integer varId) {
+        TeacherDTO teachDto = service.getTeacher(varId);
         // serve effettivamente id>=1??
         if (varId != null || varId >= 1) {
-            return ResponseEntity.ok(teach);
+            return ResponseEntity.ok(teachDto);
         }
         return ResponseEntity.notFound().build();
     }
 
     @PostMapping("")
-    public ResponseEntity<Teacher> createTeacher(@RequestBody Teacher teach) {
-        Teacher savedTeach = service.saveTeacher(teach);
-        if (teach != null) {
-            URI localUri = URI.create("api/students/" + savedTeach.getId());
-            return ResponseEntity.created(localUri).body(savedTeach);
+    public ResponseEntity<TeacherDTO> createTeacher(@RequestBody TeacherDTO teachDTO) {
+        TeacherDTO savedTeachDto = service.saveTeacher(teachDTO);
+        if (teachDTO != null) {
+            URI localUri = URI.create("api/students/" + savedTeachDto.getId());
+            return ResponseEntity.created(localUri).body(savedTeachDto);
             // best practirce crersi l'uri per i nuovi studenti
         }
         return ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Teacher> updateTeacher(@PathVariable Integer id, @RequestBody Teacher teach) {
-        Teacher newTeach = service.updateTeacher(id, teach);
+    public ResponseEntity<TeacherDTO> updateTeacher(@PathVariable Integer id, @RequestBody TeacherDTO teach) {
+        TeacherDTO newTeach = service.updateTeacher(id, teach);
         if (newTeach != null) {
             return ResponseEntity.ok().body(newTeach);
         }

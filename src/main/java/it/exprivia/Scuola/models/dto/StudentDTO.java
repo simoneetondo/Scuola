@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class StudentDTO {
 
     @Id
-	// @GeneratedValue
+	//   @GeneratedValue
     private Integer id;
     private String firstName;
     private String lastName;

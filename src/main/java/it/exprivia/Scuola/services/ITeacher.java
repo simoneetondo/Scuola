@@ -2,19 +2,20 @@ package it.exprivia.Scuola.services;
 
 import java.util.List;
 
+import it.exprivia.Scuola.models.dto.TeacherDTO;
 import it.exprivia.Scuola.models.entity.Teacher;
 
 public interface ITeacher {
 
-    public List<Teacher> getAllTeachers();
+    public List<TeacherDTO> getAllTeachers();
 
-    public Teacher getTeacher(Integer id);
+    public TeacherDTO getTeacher(Integer id);
 
     public boolean deleteTeacher(Integer id);
 
-    public Teacher saveTeacher(Teacher teach);
+    public TeacherDTO saveTeacher(TeacherDTO teachDTO);
 
     // qualora dovessimo modificare la materia dell'insegnante
     
-    public Teacher updateTeacher(Integer id, Teacher teach);
+    public TeacherDTO updateTeacher(Integer id, TeacherDTO teach);
 }

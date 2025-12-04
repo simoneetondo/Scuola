@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import it.exprivia.Scuola.mapper.TeacherMapper;
+import it.exprivia.Scuola.models.dto.TeacherDTO;
 import it.exprivia.Scuola.models.entity.Teacher;
 import it.exprivia.Scuola.repositories.IPersonRepository;
 import it.exprivia.Scuola.services.ITeacher;
@@ -16,18 +18,32 @@ public class TeacherServiceImpl implements ITeacher {
     @Autowired
     private IPersonRepository<Teacher> repo;
 
-    @Override
-    public List<Teacher> getAllTeachers() {
-        return repo.findAll();
+    // inject del mapper
+    @Autowired
+    private TeacherMapper mapper;
 
+    @Override
+    public List<TeacherDTO> getAllTeachers() {
+        // puoi mappare direttamente la lista dal mapstruct e convertire tutte le entità
+        // che hai nel repository in una lista dtos
+        List<TeacherDTO> dtos = mapper.toDTOList(repo.findAll());
+        return dtos;
     }
 
     @Override
-    public Teacher getTeacher(Integer id) {
-        if (id != 0 && id >= 1) {
-            return repo.findById(id).orElse(null);
-        }
-        return null;
+    public TeacherDTO getTeacher(Integer id) {
+        // non serve il controllo se abbiamo già la funzione che nel caso in cui non
+        // trova l'id restituisce un null di per se
+        // if (id != 0 && id >= 1) {} return null
+
+        // calcolando che il findbyid restituisce un optional ( se non trova nulla
+        // potrebbe essere vuoto )
+        // mentre il mapper vuole un teacher e quindi dobbiamo estrarlo dall'optional
+
+        return repo.findById(id)
+                .map(teach -> mapper.toDTO(teach))
+                // .map(mapper::toDTO)
+                .orElse(null);
     }
 
     @Override
@@ -43,24 +59,36 @@ public class TeacherServiceImpl implements ITeacher {
     }
 
     @Override
-    public Teacher saveTeacher(Teacher teach) {
-        if (teach != null) {
-            return repo.save(teach);
+    public TeacherDTO saveTeacher(TeacherDTO teachDTO) {
+        // se l'utente creato è diverso da null
+        if (teachDTO != null) {
+            // creiamo l'entità e la mappiamo all'oggetto creato e la salviamo
+            Teacher teacher = mapper.toEntity(teachDTO);
+            repo.save(teacher);
+            // ci facciamo restituire sempre un dto
+            // cosi' come in student dato che nel dto comunque non richiediamo l'id e non lo
+            // autogenera dobbiamo prendercelo dall'entity
+            teachDTO.setId(teacher.getId());
+            return teachDTO;
         }
         return null;
     }
 
     @Override
-    public Teacher updateTeacher(Integer id, Teacher newTeach) {
+    public TeacherDTO updateTeacher(Integer id, TeacherDTO newTeach) {
+
         Optional<Teacher> teach = repo.findById(id);
 
         if (teach.isPresent()) {
+            // metodo con il mapper
             Teacher updatedTeacher = teach.get();
             updatedTeacher.setFirstName(newTeach.getFirstName());
             updatedTeacher.setLastName(newTeach.getLastName());
             updatedTeacher.setTeacherSub(newTeach.getTeacherSub());
             repo.save(updatedTeacher);
-            return updatedTeacher;
+            // altrimenti dato che non richiediamo l'id ci restituisce comunque un dto con l'id null perchè non lo autogenera
+            newTeach.setId(updatedTeacher.getId());
+            return mapper.toDTO(updatedTeacher);
         }
         return null;
     }
