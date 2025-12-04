@@ -1,6 +1,9 @@
-package it.exprivia.progetto.repositories;
+package it.exprivia.Scuola.repositories;
 
 import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
 // INFERENZA DEL GENERICO TIPO
 // T = TYPE
@@ -11,11 +14,7 @@ import java.util.List;
 
 // PRINCIPIO DELLA SEGREGAZIONE
 
-public interface IRepositoryRead<T> {
+@NoRepositoryBean
+public interface IPersonRepository<T> extends JpaRepository<T, Integer> {
 
-    // lettura
-
-    T getById(int id);
-
-    List<T> getAll();
 }
