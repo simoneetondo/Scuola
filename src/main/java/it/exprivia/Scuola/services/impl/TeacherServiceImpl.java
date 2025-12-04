@@ -1,4 +1,4 @@
-package it.exprivia.Scuola.services;
+package it.exprivia.Scuola.services.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,8 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import it.exprivia.Scuola.models.Teacher;
+import it.exprivia.Scuola.models.entity.Teacher;
 import it.exprivia.Scuola.repositories.IPersonRepository;
+import it.exprivia.Scuola.services.ITeacher;
 
 @Service
 public class TeacherServiceImpl implements ITeacher {

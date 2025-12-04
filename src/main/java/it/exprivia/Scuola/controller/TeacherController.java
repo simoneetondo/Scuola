@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.exprivia.Scuola.models.Teacher;
-import it.exprivia.Scuola.services.TeacherServiceImpl;
+import it.exprivia.Scuola.models.entity.Teacher;
+import it.exprivia.Scuola.services.impl.TeacherServiceImpl;
 
 @RestController
 @RequestMapping("api/teachers")

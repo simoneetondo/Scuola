@@ -1,4 +1,4 @@
-package it.exprivia.Scuola.models;
+package it.exprivia.Scuola.models.entity;
 
 import java.sql.Date;
 
@@ -9,8 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+
+
 public class Student extends Person {
 
+	// generazione automatica dell'id 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -48,6 +51,7 @@ public class Student extends Person {
 	public Integer getId() {
 		return id;
 	}
+
 
 	// to string che include gli attributi della superclase e fa sempre comodo
 

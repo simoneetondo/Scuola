@@ -1,4 +1,4 @@
-package it.exprivia.Scuola.models;
+package it.exprivia.Scuola.models.entity;
 
 import it.exprivia.Scuola.models.abstracts.Person;
 import jakarta.persistence.Entity;
