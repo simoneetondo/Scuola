@@ -2,8 +2,8 @@ package it.exprivia.Scuola.models.dto;
 
 import java.sql.Date;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,14 +19,15 @@ import lombok.NoArgsConstructor;
 @Data
 public class StudentDTO {
 
-    @Id
-	//   @GeneratedValue
+    // valgono solo per le entità non per i dto
+    // @Id
+    // @GeneratedValue
     private Integer id;
     private String firstName;
     private String lastName;
     private String stuNum;
+    // metodo per formattare la data levando orario
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dateBr;
-
-
 
 }

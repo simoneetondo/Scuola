@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 
 import it.exprivia.Scuola.models.dto.StudentDTO;
 import it.exprivia.Scuola.models.entity.Student;
-import it.exprivia.Scuola.repositories.IPersonRepository;
+import it.exprivia.Scuola.repositories.StudentRepository;
 import it.exprivia.Scuola.services.IStudent;
 
 @Service
 public class StudentServiceImpl implements IStudent {
 
 	@Autowired
-	private IPersonRepository<Student> repo;
+	private StudentRepository repo;
 
 	@Override
 	public List<StudentDTO> getStudents() {
@@ -46,12 +46,20 @@ public class StudentServiceImpl implements IStudent {
 
 	@Override
 	public StudentDTO saveStudent(StudentDTO studDTO) {
+
+		// al momento unica verifica sensata tramite il numero che deve essere univoco non chiedendo l'id
+		Optional<Student> existing = repo.findByStuNum(studDTO.getStuNum());
+		if (existing.isPresent()) {
+			return null; 
+		}
+
 		Student student = new Student();
+
 		student.setFirstName(studDTO.getFirstName());
 		student.setLastName(studDTO.getLastName());
 		student.setDateBr(studDTO.getDateBr());
 		student.setStuNum(studDTO.getStuNum());
-		
+
 		repo.save(student);
 
 		// perchè non mi prende dal dto l'id autogenerato?
@@ -75,7 +83,7 @@ public class StudentServiceImpl implements IStudent {
 	@Override
 	public StudentDTO updateStudent(Integer id, StudentDTO newStudent) {
 		Optional<Student> student = repo.findById(id);
-		
+
 		if (student.isPresent()) {
 			Student updatedStudent = student.get();
 			updatedStudent.setFirstName(newStudent.getFirstName());

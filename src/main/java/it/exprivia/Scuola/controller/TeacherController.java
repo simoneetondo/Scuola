@@ -36,8 +36,9 @@ public class TeacherController {
     @GetMapping("/{varId}")
     public ResponseEntity<TeacherDTO> getTeacher(@PathVariable Integer varId) {
         TeacherDTO teachDto = service.getTeacher(varId);
-        // serve effettivamente id>=1??
-        if (varId != null || varId >= 1) {
+        // serve effettivamente id>=1?? || varId >= 1)
+
+        if (varId != null) {
             return ResponseEntity.ok(teachDto);
         }
         return ResponseEntity.notFound().build();
@@ -46,7 +47,7 @@ public class TeacherController {
     @PostMapping("")
     public ResponseEntity<TeacherDTO> createTeacher(@RequestBody TeacherDTO teachDTO) {
         TeacherDTO savedTeachDto = service.saveTeacher(teachDTO);
-        if (teachDTO != null) {
+        if (savedTeachDto != null) {
             URI localUri = URI.create("api/students/" + savedTeachDto.getId());
             return ResponseEntity.created(localUri).body(savedTeachDto);
             // best practirce crersi l'uri per i nuovi studenti

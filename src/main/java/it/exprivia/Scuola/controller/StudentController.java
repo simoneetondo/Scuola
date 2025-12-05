@@ -29,43 +29,43 @@ public class StudentController {
     @GetMapping("")
     public ResponseEntity<List<StudentDTO>> getStudents() {
         List<StudentDTO> students = service.getStudents();
-        if (students.isEmpty() || students == null) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(students);
 
+        if (students.isEmpty() || students == null) 
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(students);
     }
 
     @GetMapping("{varId}")
     public ResponseEntity<StudentDTO> getStudent(@PathVariable Integer varId) {
         StudentDTO student = service.getStudent(varId);
-        if (varId != null && varId >= 1) {
+
+        if (varId != null && varId >= 1) 
             return ResponseEntity.ok(student);
-        }
         return ResponseEntity.notFound().build();
 
     }
 
-    @DeleteMapping("{varId}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Boolean> deleteStudent(@PathVariable Integer id) {
         boolean deleted = service.deleteStudent(id);
-        if (deleted) {
+
+        if (deleted) 
             return ResponseEntity.ok().body(true);
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.badRequest().build();
 
     }
 
-        @PostMapping("")
-        public ResponseEntity<StudentDTO> createStudent(@RequestBody StudentDTO stud) {
-            StudentDTO savedStudent = service.saveStudent(stud);
-            if (savedStudent != null) {
-                URI localUri = URI.create("api/students/" + savedStudent.getId());
-                return ResponseEntity.created(localUri).body(savedStudent);
-                // best practirce crersi l'uri per i nuovi studenti
-            }
-            return ResponseEntity.badRequest().build();
+    @PostMapping("")
+    public ResponseEntity<StudentDTO> createStudent(@RequestBody StudentDTO stud) {
+        StudentDTO savedStudent = service.saveStudent(stud);
+
+        if (savedStudent != null) {
+            URI localUri = URI.create("api/students/" + savedStudent.getId());
+            return ResponseEntity.created(localUri).body(savedStudent);
+            // best practirce crersi l'uri per i nuovi studenti
         }
+        return ResponseEntity.badRequest().build();
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<StudentDTO> updateStudent(@PathVariable Integer id, @RequestBody StudentDTO newStudent) {

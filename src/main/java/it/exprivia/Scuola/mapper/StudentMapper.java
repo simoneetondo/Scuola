@@ -19,7 +19,4 @@ public interface StudentMapper {
 
     List<StudentDTO> toDTOList(List<Student> students);
 
-    
-
-
 }

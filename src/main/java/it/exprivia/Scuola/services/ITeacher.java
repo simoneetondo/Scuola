@@ -3,7 +3,6 @@ package it.exprivia.Scuola.services;
 import java.util.List;
 
 import it.exprivia.Scuola.models.dto.TeacherDTO;
-import it.exprivia.Scuola.models.entity.Teacher;
 
 public interface ITeacher {
 

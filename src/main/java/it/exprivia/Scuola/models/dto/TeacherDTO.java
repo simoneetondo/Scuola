@@ -1,8 +1,5 @@
 package it.exprivia.Scuola.models.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,13 +10,15 @@ import lombok.NoArgsConstructor;
 
 // DTO quasi uguale/identico alle entità, tranne in alcuni casi
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class TeacherDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // valgono solo per le entità non per i dto
+    // a questo punto non penso abbia senso mantenere l'id
+    // @Id
+    // @GeneratedValue
     private Integer id;
     private String firstName;
     private String lastName;

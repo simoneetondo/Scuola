@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 import it.exprivia.Scuola.mapper.TeacherMapper;
 import it.exprivia.Scuola.models.dto.TeacherDTO;
 import it.exprivia.Scuola.models.entity.Teacher;
-import it.exprivia.Scuola.repositories.IPersonRepository;
+import it.exprivia.Scuola.repositories.TeacherRepository;
 import it.exprivia.Scuola.services.ITeacher;
 
 @Service
 public class TeacherServiceImpl implements ITeacher {
 
     @Autowired
-    private IPersonRepository<Teacher> repo;
+    private TeacherRepository repo;
 
     // inject del mapper
     @Autowired
