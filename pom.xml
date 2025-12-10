@@ -141,6 +141,39 @@
 
 		</plugins>
 
-		</build>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>simple-test</id>
+			<properties>
+				<db.environment.url>jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1</db.environment.url>
+				<is.running.tests>true</is.running.tests>
+				<log.level>DEBUG</log.level>
+			</properties>
+
+			<dependencies>
+				<dependency>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+					<version>2.2.224</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>3.0.0-M9</version>
+						<configuration>
+							<excludedGroups>slow-integration</excludedGroups>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
