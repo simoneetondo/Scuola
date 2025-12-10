@@ -60,8 +60,9 @@ public class StudentController {
         StudentDTO savedStudent = service.saveStudent(stud);
 
         if (savedStudent != null) {
-            URI localUri = URI.create("api/students/" + savedStudent.getId());
-            return ResponseEntity.created(localUri).body(savedStudent);
+            // URI localUri = URI.create("api/students/" + savedStudent.getId());
+            // return ResponseEntity.created(localUri).body(savedStudent);
+            return ResponseEntity.ok(savedStudent);
             // best practirce crersi l'uri per i nuovi studenti
         }
         return ResponseEntity.badRequest().build();

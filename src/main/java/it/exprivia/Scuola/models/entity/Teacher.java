@@ -22,8 +22,8 @@ public class Teacher extends Person {
 
 	// costruttore con param
 
-	public Teacher(String firstName, String lastName) {
-		super(firstName, lastName);
+	public Teacher(String username, String password, String firstName, String lastName) {
+		super(username, password,firstName, lastName);
 	}
 
 	// getters and setters

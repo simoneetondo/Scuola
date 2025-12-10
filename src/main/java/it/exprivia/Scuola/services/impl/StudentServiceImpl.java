@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import it.exprivia.Scuola.models.dto.StudentDTO;
 import it.exprivia.Scuola.models.entity.Student;
+import it.exprivia.Scuola.models.entity.Teacher;
 import it.exprivia.Scuola.repositories.StudentRepository;
 import it.exprivia.Scuola.services.IStudent;
 
@@ -22,7 +23,7 @@ public class StudentServiceImpl implements IStudent {
 		return repo.findAll().stream()
 				.map(student -> {
 					StudentDTO dto = new StudentDTO();
-					dto.setId(student.getId());
+					// dto.setId(student.getId());
 					dto.setFirstName(student.getFirstName());
 					dto.setLastName(student.getLastName());
 					dto.setStuNum(student.getStuNum());
@@ -36,7 +37,7 @@ public class StudentServiceImpl implements IStudent {
 	public StudentDTO getStudent(Integer id) {
 		Student stud = repo.findById(id).orElse(null);
 		StudentDTO studDTO = new StudentDTO();
-		studDTO.setId(stud.getId());
+		// studDTO.setId(stud.getId());
 		studDTO.setFirstName(stud.getFirstName());
 		studDTO.setLastName(stud.getLastName());
 		studDTO.setDateBr(stud.getDateBr());
@@ -47,14 +48,17 @@ public class StudentServiceImpl implements IStudent {
 	@Override
 	public StudentDTO saveStudent(StudentDTO studDTO) {
 
-		// al momento unica verifica sensata tramite il numero che deve essere univoco non chiedendo l'id
+		// al momento unica verifica sensata tramite il numero che deve essere univoco
+		// non chiedendo l'id
 		Optional<Student> existing = repo.findByStuNum(studDTO.getStuNum());
 		if (existing.isPresent()) {
-			return null; 
+			return null;
 		}
 
 		Student student = new Student();
 
+		student.setUsername(studDTO.getUsername());
+		student.setPassword(studDTO.getPassword());
 		student.setFirstName(studDTO.getFirstName());
 		student.setLastName(studDTO.getLastName());
 		student.setDateBr(studDTO.getDateBr());
@@ -63,7 +67,7 @@ public class StudentServiceImpl implements IStudent {
 		repo.save(student);
 
 		// perchè non mi prende dal dto l'id autogenerato?
-		studDTO.setId(student.getId());
+		// studDTO.setId(student.getId());
 		return studDTO;
 	}
 
@@ -92,7 +96,7 @@ public class StudentServiceImpl implements IStudent {
 			updatedStudent.setDateBr(newStudent.getDateBr());
 			repo.save(updatedStudent);
 			StudentDTO studDTO = new StudentDTO();
-			studDTO.setId(updatedStudent.getId());
+			// studDTO.setId(updatedStudent.getId());
 			studDTO.setFirstName(updatedStudent.getFirstName());
 			studDTO.setLastName(updatedStudent.getLastName());
 			studDTO.setStuNum(updatedStudent.getStuNum());
@@ -102,4 +106,16 @@ public class StudentServiceImpl implements IStudent {
 		return null;
 	}
 
+	public boolean login(String username, String password) {
+
+		Optional<Student> stud = repo.findByUsernameAndPassword(username, password);
+
+		if (stud.isEmpty())
+			return false;
+		if (!stud.get().getPassword().equals(password) && !stud.get().getUsername().equals(username))
+			return false;
+
+		return true;
+
+	}
 }

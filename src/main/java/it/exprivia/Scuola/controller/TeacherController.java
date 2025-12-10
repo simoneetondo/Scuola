@@ -48,8 +48,9 @@ public class TeacherController {
     public ResponseEntity<TeacherDTO> createTeacher(@RequestBody TeacherDTO teachDTO) {
         TeacherDTO savedTeachDto = service.saveTeacher(teachDTO);
         if (savedTeachDto != null) {
-            URI localUri = URI.create("api/students/" + savedTeachDto.getId());
-            return ResponseEntity.created(localUri).body(savedTeachDto);
+           // URI localUri = URI.create("api/students/" + savedTeachDto.getId());
+           // return ResponseEntity.created(localUri).body(savedTeachDto);
+           return ResponseEntity.ok(savedTeachDto);
             // best practirce crersi l'uri per i nuovi studenti
         }
         return ResponseEntity.badRequest().build();

@@ -1,5 +1,7 @@
 package it.exprivia.Scuola.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -14,5 +16,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
 public interface IPersonRepository<T> extends JpaRepository<T, Integer> {
+    // creiamo il metodo su IPerson perchè lo implementano sia teacher sia student
+    Optional<T> findByUsernameAndPassword(String username, String password);
 
 }

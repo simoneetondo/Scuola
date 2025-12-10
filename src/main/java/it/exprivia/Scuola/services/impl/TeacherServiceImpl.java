@@ -68,7 +68,7 @@ public class TeacherServiceImpl implements ITeacher {
             // ci facciamo restituire sempre un dto
             // cosi' come in student dato che nel dto comunque non richiediamo l'id e non lo
             // autogenera dobbiamo prendercelo dall'entity
-            teachDTO.setId(teacher.getId());
+            // teachDTO.setId(teacher.getId());
             return teachDTO;
         }
         return null;
@@ -86,11 +86,24 @@ public class TeacherServiceImpl implements ITeacher {
             updatedTeacher.setLastName(newTeach.getLastName());
             updatedTeacher.setTeacherSub(newTeach.getTeacherSub());
             repo.save(updatedTeacher);
-            // altrimenti dato che non richiediamo l'id ci restituisce comunque un dto con l'id null perchè non lo autogenera
-            newTeach.setId(updatedTeacher.getId());
+            // altrimenti dato che non richiediamo l'id ci restituisce comunque un dto con
+            // l'id null perchè non lo autogenera
+            // newTeach.setId(updatedTeacher.getId());
             return mapper.toDTO(updatedTeacher);
         }
         return null;
     }
 
+    public boolean login(String username, String password) {
+
+        Optional<Teacher> teach = repo.findByUsernameAndPassword(username, password);
+
+        if (teach.isEmpty())
+            return false;
+        if (!teach.get().getPassword().equals(password) && !teach.get().getUsername().equals(username))
+            return false;
+
+        return true;
+
+    }
 }

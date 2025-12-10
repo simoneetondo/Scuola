@@ -26,8 +26,10 @@ public class Student extends Person {
 	}
 
 	// costruttore con param
-	public Student(String firstName, String lastName) {
-		super(firstName, lastName);
+	public Student(String username, String password, String firstName, String lastName, String stuNum, Date dateBr) {
+		super(username, password, firstName, lastName);
+		this.stuNum = stuNum;
+		this.dateBr= dateBr;
 	}
 
 	// getters and setters
