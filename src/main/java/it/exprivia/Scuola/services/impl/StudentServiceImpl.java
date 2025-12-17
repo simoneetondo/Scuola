@@ -6,9 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import it.exprivia.Scuola.mapper.StudentMapper;
 import it.exprivia.Scuola.models.dto.StudentDTO;
+import it.exprivia.Scuola.models.dto.TeacherDTO;
 import it.exprivia.Scuola.models.entity.Student;
-import it.exprivia.Scuola.models.entity.Teacher;
 import it.exprivia.Scuola.repositories.StudentRepository;
 import it.exprivia.Scuola.services.IStudent;
 
@@ -17,32 +18,40 @@ public class StudentServiceImpl implements IStudent {
 
 	@Autowired
 	private StudentRepository repo;
+	private StudentMapper mapper;
+
+	// utilizzare il costruttore per l'iniezione delle dependency
+	// Problema: il test crea new StudentServiceImpl(studentMapperMock,
+	// studentRepositoryMock) ma la classe non ha quel costruttore, quindi il
+	// compilatore segnala l'errore.
+
+	public StudentServiceImpl(StudentMapper mapper, StudentRepository repo) {
+		this.mapper = mapper;
+		this.repo = repo;
+	}
+
+	// bisogna utilizzare il mapper se lo si vuole utilizzare anche nei test
 
 	@Override
 	public List<StudentDTO> getStudents() {
-		return repo.findAll().stream()
-				.map(student -> {
-					StudentDTO dto = new StudentDTO();
-					// dto.setId(student.getId());
-					dto.setFirstName(student.getFirstName());
-					dto.setLastName(student.getLastName());
-					dto.setStuNum(student.getStuNum());
-					dto.setDateBr(student.getDateBr());
-					return dto;
-				})
-				.toList();
+		 List<StudentDTO> dtos = mapper.toDTOList(repo.findAll());
+        return dtos;
 	}
 
 	@Override
 	public StudentDTO getStudent(Integer id) {
-		Student stud = repo.findById(id).orElse(null);
-		StudentDTO studDTO = new StudentDTO();
-		// studDTO.setId(stud.getId());
-		studDTO.setFirstName(stud.getFirstName());
-		studDTO.setLastName(stud.getLastName());
-		studDTO.setDateBr(stud.getDateBr());
-		studDTO.setStuNum(stud.getStuNum());
-		return studDTO;
+	// troviamo tramite il repo l'id e mappiamo lo studente trovato in un dto, altrimenti è null
+		return repo.findById(id)
+		.map(stud -> mapper.toDTO(stud))
+		.orElse(null);
+		// Student stud = repo.findById(id).orElse(null);
+		// StudentDTO studDTO = new StudentDTO();
+		// // studDTO.setId(stud.getId());
+		// studDTO.setFirstName(stud.getFirstName());
+		// studDTO.setLastName(stud.getLastName());
+		// studDTO.setDateBr(stud.getDateBr());
+		// studDTO.setStuNum(stud.getStuNum());
+		// return studDTO;
 	}
 
 	@Override

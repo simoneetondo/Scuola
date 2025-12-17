@@ -10,10 +10,9 @@ import jakarta.persistence.Id;
 
 @Entity
 
-
 public class Student extends Person {
 
-	// generazione automatica dell'id 
+	// generazione automatica dell'id
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -29,7 +28,15 @@ public class Student extends Person {
 	public Student(String username, String password, String firstName, String lastName, String stuNum, Date dateBr) {
 		super(username, password, firstName, lastName);
 		this.stuNum = stuNum;
-		this.dateBr= dateBr;
+		this.dateBr = dateBr;
+	}
+
+	// costruttore che ci serve solo per i test
+	public Student(String firstName, String lastName, String stuNum) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.stuNum = stuNum;
 	}
 
 	// getters and setters
@@ -53,7 +60,6 @@ public class Student extends Person {
 	public Integer getId() {
 		return id;
 	}
-
 
 	// to string che include gli attributi della superclase e fa sempre comodo
 

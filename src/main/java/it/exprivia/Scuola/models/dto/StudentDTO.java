@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,12 +18,11 @@ import lombok.Setter;
 
 // provando ad utilizzare lombock 
 
-// 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = {"username", "password"})
 public class StudentDTO {
 
     // valgono solo per le entità non per i dto
@@ -39,5 +39,13 @@ public class StudentDTO {
     // metodo per formattare la data levando orario
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dateBr;
+
+    public StudentDTO(String firstName, String lastName, String stuNum){
+        this.firstName= firstName;
+        this.lastName = lastName;
+        this.stuNum = stuNum;
+    }
+
+    // public record StudentDTO ( * PARAMETRI *)
 
 }
