@@ -1,6 +1,5 @@
 package it.exprivia.Scuola.repositories;
 
-import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 

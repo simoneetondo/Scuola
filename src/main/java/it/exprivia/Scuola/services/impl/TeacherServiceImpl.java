@@ -82,9 +82,9 @@ public class TeacherServiceImpl implements ITeacher {
         if (teach.isPresent()) {
             // metodo con il mapper
             Teacher updatedTeacher = teach.get();
-            updatedTeacher.setFirstName(newTeach.getFirstName());
-            updatedTeacher.setLastName(newTeach.getLastName());
-            updatedTeacher.setTeacherSub(newTeach.getTeacherSub());
+            updatedTeacher.setFirstName(newTeach.firstName());
+            updatedTeacher.setLastName(newTeach.lastName());
+            updatedTeacher.setTeacherSub(newTeach.teacherSub());
             repo.save(updatedTeacher);
             // altrimenti dato che non richiediamo l'id ci restituisce comunque un dto con
             // l'id null perchè non lo autogenera

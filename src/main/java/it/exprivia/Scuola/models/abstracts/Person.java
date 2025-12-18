@@ -2,11 +2,11 @@ package it.exprivia.Scuola.models.abstracts;
 
 import jakarta.persistence.MappedSuperclass;
 
+// Questo dice a JPA di non creare una tabella Person, ma di aggiungere i campi username, password, ecc., nelle tabelle dei figli 
 @MappedSuperclass
 public abstract class Person {
 	// mettendo protected i figli che ereditano vedono gli attributi e non sono
-	// visibili solo a questa
-	// classe
+	// visibili solo a questa classe
 	protected String username;
 	protected String password;
 	protected String firstName;

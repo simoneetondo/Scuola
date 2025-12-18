@@ -3,6 +3,7 @@ package it.exprivia.Scuola.services;
 import java.util.List;
 
 import it.exprivia.Scuola.models.dto.StudentDTO;
+import it.exprivia.Scuola.models.dto.StudentRegisterRequest;
 
 public interface IStudent {
 	
@@ -10,9 +11,9 @@ public interface IStudent {
 	
 		public StudentDTO getStudent(Integer id);	
 		
-		public StudentDTO saveStudent(StudentDTO studDTO);
+		public StudentDTO saveStudent(StudentRegisterRequest studDTO);
 		
-		public boolean deleteStudent(Integer id);
+		public void deleteStudent(Integer id);
 		
 		// update student al momento senza senso perchè è servirebbe qualora inseriamo indirizzi
 

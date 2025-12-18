@@ -68,3 +68,8 @@ AGGIUNGERE RESPONSE ENTITY E CONTROLLI SUL NULL -- OK
 			</properties>
 		</profile>
 /profiles>
+
+ id = null o controlli su id - strategy o verify springboot 
+ password utilizzare becrypt
+ coverage da implementare
+ test si utilizza should_*nomeMetodoIniziale*_return*- - -* (business exception, empty, etc)

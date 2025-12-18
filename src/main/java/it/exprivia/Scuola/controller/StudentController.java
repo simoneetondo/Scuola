@@ -1,9 +1,10 @@
 package it.exprivia.Scuola.controller;
 
-import java.net.URI;
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.exprivia.Scuola.models.dto.StudentDTO;
+import it.exprivia.Scuola.models.dto.StudentRegisterRequest;
+import it.exprivia.Scuola.services.IStudent;
 import it.exprivia.Scuola.services.impl.StudentServiceImpl;
 
 @RestController
@@ -22,59 +25,40 @@ import it.exprivia.Scuola.services.impl.StudentServiceImpl;
 public class StudentController {
 
     @Autowired
-    private StudentServiceImpl service;
+    private IStudent service;
 
     // inserire un oggetto di tipo DTO e mapparlo nel service
 
+    // GET ALL
     @GetMapping("")
     public ResponseEntity<List<StudentDTO>> getStudents() {
-        List<StudentDTO> students = service.getStudents();
-
-        if (students.isEmpty() || students == null) 
-            return ResponseEntity.noContent().build();
-        return ResponseEntity.ok(students);
-    }
-
-    @GetMapping("{varId}")
-    public ResponseEntity<StudentDTO> getStudent(@PathVariable Integer varId) {
-        StudentDTO student = service.getStudent(varId);
-
-        if (varId != null && varId >= 1) 
-            return ResponseEntity.ok(student);
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(service.getStudents());
 
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Boolean> deleteStudent(@PathVariable Integer id) {
-        boolean deleted = service.deleteStudent(id);
+    // GET BY ID
+    @GetMapping("{id}")
+    public ResponseEntity<StudentDTO> getStudent(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getStudent(id));
+    }
 
-        if (deleted) 
-            return ResponseEntity.ok().body(true);
-        return ResponseEntity.badRequest().build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable Integer id) {
+        service.deleteStudent(id);
+        return ResponseEntity.noContent().build();
 
     }
 
     @PostMapping("")
-    public ResponseEntity<StudentDTO> createStudent(@RequestBody StudentDTO stud) {
-        StudentDTO savedStudent = service.saveStudent(stud);
-
-        if (savedStudent != null) {
-            // URI localUri = URI.create("api/students/" + savedStudent.getId());
-            // return ResponseEntity.created(localUri).body(savedStudent);
-            return ResponseEntity.ok(savedStudent);
-            // best practirce crersi l'uri per i nuovi studenti
-        }
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<StudentDTO> createStudent(@RequestBody StudentRegisterRequest stud) {
+        StudentDTO createdStudent = service.saveStudent(stud);
+        return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
     }
-
+    
+    // UPDATE 
     @PutMapping("/{id}")
     public ResponseEntity<StudentDTO> updateStudent(@PathVariable Integer id, @RequestBody StudentDTO newStudent) {
         StudentDTO modifiedStudent = service.updateStudent(id, newStudent);
-        if (modifiedStudent != null) {
-            return ResponseEntity.ok().body(modifiedStudent);
-
-        }
-        return ResponseEntity.notFound().build();
+        return new ResponseEntity<>(modifiedStudent, HttpStatus.OK);
     }
 }

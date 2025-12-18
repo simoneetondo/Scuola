@@ -6,9 +6,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import it.exprivia.Scuola.exception.DuplicateResourceException;
+import it.exprivia.Scuola.exception.ResourceNotFoundException;
 import it.exprivia.Scuola.mapper.StudentMapper;
 import it.exprivia.Scuola.models.dto.StudentDTO;
-import it.exprivia.Scuola.models.dto.TeacherDTO;
+import it.exprivia.Scuola.models.dto.StudentRegisterRequest;
 import it.exprivia.Scuola.models.entity.Student;
 import it.exprivia.Scuola.repositories.StudentRepository;
 import it.exprivia.Scuola.services.IStudent;
@@ -34,16 +36,23 @@ public class StudentServiceImpl implements IStudent {
 
 	@Override
 	public List<StudentDTO> getStudents() {
-		 List<StudentDTO> dtos = mapper.toDTOList(repo.findAll());
-        return dtos;
+		return mapper.toDTOList(repo.findAll());
+
+		// List<StudentDTO> dtos = mapper.toDTOList(repo.findAll());
+		// return dtos;
 	}
 
 	@Override
 	public StudentDTO getStudent(Integer id) {
-	// troviamo tramite il repo l'id e mappiamo lo studente trovato in un dto, altrimenti è null
+		// troviamo tramite il repo l'id e mappiamo lo studente trovato in un dto,
+		// altrimenti è null
+		// se lo studente viene trovato lo mappa direttamente in dto altrimenti scatena
+		// eccezione
+
 		return repo.findById(id)
-		.map(stud -> mapper.toDTO(stud))
-		.orElse(null);
+				.map(stud -> mapper.toDTO(stud))
+				.orElseThrow(() -> new ResourceNotFoundException("Utente con id:" + id + " non presente."));
+
 		// Student stud = repo.findById(id).orElse(null);
 		// StudentDTO studDTO = new StudentDTO();
 		// // studDTO.setId(stud.getId());
@@ -54,65 +63,72 @@ public class StudentServiceImpl implements IStudent {
 		// return studDTO;
 	}
 
+	// ci andiamo a richiamare lo stuNum come identificativo
+	// se non esiste andiamo a crearci l'entità, ci settiamo i campi che riceviamo
+	// nella registrazione
+	// la salviamo e facciamo il return direttamente del DTO tramite il mapper che
+	// restituisce un oggetto di tipo
+	// studentDTO SENZA LA PASSWORD
 	@Override
-	public StudentDTO saveStudent(StudentDTO studDTO) {
+	public StudentDTO saveStudent(StudentRegisterRequest studReg) {
 
 		// al momento unica verifica sensata tramite il numero che deve essere univoco
 		// non chiedendo l'id
-		Optional<Student> existing = repo.findByStuNum(studDTO.getStuNum());
-		if (existing.isPresent()) {
-			return null;
+		if (repo.findByStuNum(studReg.stuNum()).isPresent()) {
+			throw new DuplicateResourceException("Utente con identificativo" + studReg.stuNum() + " già esistente");
 		}
 
-		Student student = new Student();
+		// creiamo un nuovo mapper che mappa la richiesta di registrazione in entità
+		Student student = mapper.toEntity(studReg);
 
-		student.setUsername(studDTO.getUsername());
-		student.setPassword(studDTO.getPassword());
-		student.setFirstName(studDTO.getFirstName());
-		student.setLastName(studDTO.getLastName());
-		student.setDateBr(studDTO.getDateBr());
-		student.setStuNum(studDTO.getStuNum());
+		// student.setUsername(studReg.username());
+		// student.setPassword(studReg.password());
+		// student.setFirstName(studReg.firstName());
+		// student.setLastName(studReg.lastName());
+		// student.setDateBr(studReg.dateBr());
+		// student.setStuNum(studReg.stuNum());
 
 		repo.save(student);
-
-		// perchè non mi prende dal dto l'id autogenerato?
-		// studDTO.setId(student.getId());
-		return studDTO;
+		return mapper.toDTO(student);
 	}
 
+	// SOFT_DELETE? per i casi di scuola è utile una volta eliminato uno studente
+	// avere in memoria i voti o esami a lui annessi
 	@Override
-	public boolean deleteStudent(Integer id) {
-		if (id == null || id <= 0) {
-			return false;
-		}
-		if (!repo.existsById(id)) {
-			return false;
-		}
-		repo.deleteById(id);
-		return true;
-
+	public void deleteStudent(Integer id) {
+		// verify o strategy? springboot
+		// se non viene trovato con quell'id viene sollevata un'eccezione, se lo trova
+		// procede e lo elimina dal repo
+		Student stud = repo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Studente con id:" + id + " non trovato"));
+		repo.delete(stud);
 	}
+
+	// @Transactional , Hibernate si accorge da solo se hai cambiato i dati
+	// dell'oggetto student, forse potrebbe
+	// anche non servire il save(student)
+
+	// rimodernizzato, abbiamo tolto il return null perchè se non lo trova solleva
+	// direttamente un'eccezione
+	// se lo trova invece vuol dire che non è entrato nell'eccezione e possiamo
+	// direttamente settarli i param che ci fornisce l'utente
 
 	@Override
 	public StudentDTO updateStudent(Integer id, StudentDTO newStudent) {
-		Optional<Student> student = repo.findById(id);
+		Student student = repo.findById(id)
+				.orElseThrow(
+						() -> new ResourceNotFoundException("Studente con id:" + id + " non trovato o non presente."));
 
-		if (student.isPresent()) {
-			Student updatedStudent = student.get();
-			updatedStudent.setFirstName(newStudent.getFirstName());
-			updatedStudent.setLastName(newStudent.getLastName());
-			updatedStudent.setStuNum(newStudent.getStuNum());
-			updatedStudent.setDateBr(newStudent.getDateBr());
-			repo.save(updatedStudent);
-			StudentDTO studDTO = new StudentDTO();
-			// studDTO.setId(updatedStudent.getId());
-			studDTO.setFirstName(updatedStudent.getFirstName());
-			studDTO.setLastName(updatedStudent.getLastName());
-			studDTO.setStuNum(updatedStudent.getStuNum());
-			studDTO.setDateBr(updatedStudent.getDateBr());
-			return studDTO;
-		}
-		return null;
+		student.setUsername(newStudent.username());
+		student.setFirstName(newStudent.firstName());
+		student.setLastName(newStudent.lastName());
+		student.setStuNum(newStudent.stuNum());
+		student.setDateBr(newStudent.dateBr());
+
+		Student updatedStud = repo.save(student);
+
+		return mapper.toDTO(updatedStud);
+		// studDTO.setId(updatedStudent.getId());
 	}
 
 	public boolean login(String username, String password) {

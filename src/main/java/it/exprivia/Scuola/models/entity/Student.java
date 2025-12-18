@@ -1,6 +1,7 @@
 package it.exprivia.Scuola.models.entity;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import it.exprivia.Scuola.models.abstracts.Person;
 import jakarta.persistence.Entity;
@@ -17,7 +18,7 @@ public class Student extends Person {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String stuNum;
-	private Date dateBr;
+	private LocalDate dateBr;
 
 	// costruttore vuoto
 	public Student() {
@@ -25,7 +26,8 @@ public class Student extends Person {
 	}
 
 	// costruttore con param
-	public Student(String username, String password, String firstName, String lastName, String stuNum, Date dateBr) {
+	// Non si utilizza piu Date perchè è deprecato, si utilizza LocalDate / LocalDateTime
+	public Student(String username, String password, String firstName, String lastName, String stuNum, LocalDate dateBr) {
 		super(username, password, firstName, lastName);
 		this.stuNum = stuNum;
 		this.dateBr = dateBr;
@@ -49,16 +51,20 @@ public class Student extends Person {
 		this.stuNum = stuNum;
 	}
 
-	public Date getDateBr() {
+	public LocalDate getDateBr() {
 		return dateBr;
 	}
 
-	public void setDateBr(Date dateBr) {
+	public void setDateBr(LocalDate dateBr) {
 		this.dateBr = dateBr;
 	}
 
 	public Integer getId() {
 		return id;
+	}
+	
+	public void setId(Integer id){
+		this.id= id;
 	}
 
 	// to string che include gli attributi della superclase e fa sempre comodo

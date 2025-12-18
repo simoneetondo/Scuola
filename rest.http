@@ -2,7 +2,7 @@ GET http://127.0.0.1:8080/api/students
 
 ###
 
-GET http://127.0.0.1:8080/api/students/1
+GET http://127.0.0.1:8080/api/students/2
 
 ###
 
@@ -10,6 +10,8 @@ POST http://127.0.0.1:8080/api/students
 Content-Type: application/json
 
 {
+    "username": "Flavietto",
+    "password" : "1234",
     "firstName": "Flavio",
     "lastName": "Stincone",
     "stuNum": "3297166198",
@@ -29,4 +31,4 @@ Content-Type: application/json
 
 ###
 
-DELETE http://127.0.0.1:8080/api/students/3
+DELETE http://127.0.0.1:8080/api/students/1

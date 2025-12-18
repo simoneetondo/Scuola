@@ -20,11 +20,12 @@ public class Teacher extends Person {
 		super();
 	}
 
-	// costruttore con param
+	// costruttore con parametri che chiedi al momento della registrazione 
 
-	public Teacher(String username, String password, String firstName, String lastName) {
+	public Teacher(String username, String password, String firstName, String lastName, String teacherSub) {
 		super(username, password,firstName, lastName);
-	}
+		this.teacherSub = teacherSub;
+	}	
 
 	// getters and setters
 
@@ -42,9 +43,11 @@ public class Teacher extends Person {
 
 	// to string che include gli attributi della superclase e fa sempre comodo
 
+	// se utilizziamo protected possiamo inserire direttamente il campo per ereditarlo 
+	// ma la best practice è quella di utilizzare i getter e i setter
 	@Override
 	public String toString() {
-		return "Teacher [teacherSub=" + teacherSub + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+		return "Teacher [teacherSub=" + teacherSub + ", firstName=" + this.getFirstName() + ", lastName=" + this.getLastName() + "]";
 	}
 
 }
