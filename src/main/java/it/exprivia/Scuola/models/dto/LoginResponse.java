@@ -4,5 +4,8 @@ package it.exprivia.Scuola.models.dto;
 // un messaggio di risposta
 // il ruolo
 // e person che possiamo decidere student o teacher
-public record LoginResponse(String message, String role, PersonDTO user) {
+public record LoginResponse(
+        String message,
+        String role,
+        PersonDTO user) {
 }

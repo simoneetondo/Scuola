@@ -2,7 +2,7 @@ GET http://127.0.0.1:8080/api/students
 
 ###
 
-GET http://127.0.0.1:8080/api/students/2
+GET http://127.0.0.1:8080/api/students/1
 
 ###
 
@@ -11,10 +11,10 @@ Content-Type: application/json
 
 {
     "username": "Flavietto",
-    "password" : "1234",
+    "password" : "lollo1234!",
     "firstName": "Flavio",
     "lastName": "Stincone",
-    "stuNum": "3297166198",
+    "stuNum": "329716618",
     "dateBr": "2025-06-10"
 }
 

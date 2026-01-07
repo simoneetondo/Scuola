@@ -1,5 +1,7 @@
 package it.exprivia.Scuola.models.abstracts;
 
+import org.hibernate.mapping.Column;
+
 import jakarta.persistence.MappedSuperclass;
 
 // Questo dice a JPA di non creare una tabella Person, ma di aggiungere i campi username, password, ecc., nelle tabelle dei figli 

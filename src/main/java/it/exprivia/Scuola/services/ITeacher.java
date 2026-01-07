@@ -10,7 +10,7 @@ public interface ITeacher {
 
     public TeacherDTO getTeacher(Integer id);
 
-    public boolean deleteTeacher(Integer id);
+    public void deleteTeacher(Integer id);
 
     public TeacherDTO saveTeacher(TeacherDTO teachDTO);
 

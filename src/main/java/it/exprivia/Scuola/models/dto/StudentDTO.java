@@ -25,9 +25,9 @@ import java.time.LocalDate;
 // @Setter
 // @EqualsAndHashCode(exclude = {"username", "password"})
 
-
-public record StudentDTO(Integer id, String username, String firstName, String lastName, String stuNum, LocalDate dateBr)
-        implements PersonDTO {
+public record StudentDTO(Integer id, String username, String firstName, String lastName, String stuNum,
+                LocalDate dateBr)
+                implements PersonDTO {
 }
 
 // valgono solo per le entità non per i dto

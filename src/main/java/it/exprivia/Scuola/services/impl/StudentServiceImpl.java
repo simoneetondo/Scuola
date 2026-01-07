@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import it.exprivia.Scuola.exception.DuplicateResourceException;
@@ -21,15 +22,17 @@ public class StudentServiceImpl implements IStudent {
 	@Autowired
 	private StudentRepository repo;
 	private StudentMapper mapper;
+	private BCryptPasswordEncoder passwordEncoder;
 
 	// utilizzare il costruttore per l'iniezione delle dependency
 	// Problema: il test crea new StudentServiceImpl(studentMapperMock,
-	// studentRepositoryMock) ma la classe non ha quel costruttore, quindi il
+	// studentRepositoryMock ma la classe non ha quel costruttore, quindi il
 	// compilatore segnala l'errore.
 
-	public StudentServiceImpl(StudentMapper mapper, StudentRepository repo) {
+	public StudentServiceImpl(StudentMapper mapper, StudentRepository repo, BCryptPasswordEncoder passwordEncoder) {
 		this.mapper = mapper;
 		this.repo = repo;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	// bisogna utilizzare il mapper se lo si vuole utilizzare anche nei test
@@ -81,6 +84,9 @@ public class StudentServiceImpl implements IStudent {
 		// creiamo un nuovo mapper che mappa la richiesta di registrazione in entità
 		Student student = mapper.toEntity(studReg);
 
+		String cryptedPassword = passwordEncoder.encode(studReg.password());
+		student.setPassword(cryptedPassword);
+
 		// student.setUsername(studReg.username());
 		// student.setPassword(studReg.password());
 		// student.setFirstName(studReg.firstName());
@@ -117,7 +123,7 @@ public class StudentServiceImpl implements IStudent {
 	public StudentDTO updateStudent(Integer id, StudentDTO newStudent) {
 		Student student = repo.findById(id)
 				.orElseThrow(
-						() -> new ResourceNotFoundException("Studente con id:" + id + " non trovato o non presente."));
+						() -> new ResourceNotFoundException("Studente con id:" + id + " non presente."));
 
 		student.setUsername(newStudent.username());
 		student.setFirstName(newStudent.firstName());
@@ -143,4 +149,5 @@ public class StudentServiceImpl implements IStudent {
 		return true;
 
 	}
+
 }
