@@ -3,6 +3,7 @@ package it.exprivia.Scuola.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import it.exprivia.Scuola.models.dto.StudentDTO;
 import it.exprivia.Scuola.models.dto.StudentRegisterRequest;
@@ -14,7 +15,9 @@ import it.exprivia.Scuola.models.entity.Student;
 @Mapper(componentModel = "spring")
 public interface StudentMapper {
 
+    @Mapping(target = "password", ignore = true) // Impedisce la copia della password in chiaro
     Student toEntity(StudentRegisterRequest studentReg);
+
     Student toEntity(StudentDTO studentDTO);
 
     StudentDTO toDTO(Student student);

@@ -19,6 +19,7 @@ import it.exprivia.Scuola.models.dto.StudentDTO;
 import it.exprivia.Scuola.models.dto.StudentRegisterRequest;
 import it.exprivia.Scuola.services.IStudent;
 import it.exprivia.Scuola.services.impl.StudentServiceImpl;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/students")
@@ -50,7 +51,7 @@ public class StudentController {
     }
 
     @PostMapping("")
-    public ResponseEntity<StudentDTO> createStudent(@RequestBody StudentRegisterRequest stud) {
+    public ResponseEntity<StudentDTO> createStudent(@Valid @RequestBody StudentRegisterRequest stud) {
         StudentDTO createdStudent = service.saveStudent(stud);
         return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
     }

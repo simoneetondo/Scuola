@@ -20,5 +20,4 @@ public interface ITeacher {
     
     // login da dividere sia nel controller sia nel service creando una login service
 
-    public boolean login(String username, String password);
 }

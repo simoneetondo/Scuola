@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.exprivia.Scuola.exception.DuplicateResourceException;
 import it.exprivia.Scuola.exception.ResourceNotFoundException;
@@ -19,135 +20,123 @@ import it.exprivia.Scuola.services.IStudent;
 @Service
 public class StudentServiceImpl implements IStudent {
 
-	@Autowired
-	private StudentRepository repo;
-	private StudentMapper mapper;
-	private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private StudentRepository repo;
+    private StudentMapper mapper;
+    private BCryptPasswordEncoder passwordEncoder;
 
-	// utilizzare il costruttore per l'iniezione delle dependency
-	// Problema: il test crea new StudentServiceImpl(studentMapperMock,
-	// studentRepositoryMock ma la classe non ha quel costruttore, quindi il
-	// compilatore segnala l'errore.
+    // utilizzare il costruttore per l'iniezione delle dependency
+    // Problema: il test crea new StudentServiceImpl(studentMapperMock,
+    // studentRepositoryMock ma la classe non ha quel costruttore, quindi il
+    // compilatore segnala l'errore.
 
-	public StudentServiceImpl(StudentMapper mapper, StudentRepository repo, BCryptPasswordEncoder passwordEncoder) {
-		this.mapper = mapper;
-		this.repo = repo;
-		this.passwordEncoder = passwordEncoder;
-	}
+    public StudentServiceImpl(StudentMapper mapper, StudentRepository repo, BCryptPasswordEncoder passwordEncoder) {
+        this.mapper = mapper;
+        this.repo = repo;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-	// bisogna utilizzare il mapper se lo si vuole utilizzare anche nei test
+    // bisogna utilizzare il mapper se lo si vuole utilizzare anche nei test
 
-	@Override
-	public List<StudentDTO> getStudents() {
-		return mapper.toDTOList(repo.findAll());
+    @Override
+    public List<StudentDTO> getStudents() {
+        return mapper.toDTOList(repo.findAll());
 
-		// List<StudentDTO> dtos = mapper.toDTOList(repo.findAll());
-		// return dtos;
-	}
+        // List<StudentDTO> dtos = mapper.toDTOList(repo.findAll());
+        // return dtos;
+    }
 
-	@Override
-	public StudentDTO getStudent(Integer id) {
-		// troviamo tramite il repo l'id e mappiamo lo studente trovato in un dto,
-		// altrimenti è null
-		// se lo studente viene trovato lo mappa direttamente in dto altrimenti scatena
-		// eccezione
+    @Override
+    public StudentDTO getStudent(Integer id) {
+        // troviamo tramite il repo l'id e mappiamo lo studente trovato in un dto,
+        // altrimenti è null
+        // se lo studente viene trovato lo mappa direttamente in dto altrimenti scatena
+        // eccezione
 
-		return repo.findById(id)
-				.map(stud -> mapper.toDTO(stud))
-				.orElseThrow(() -> new ResourceNotFoundException("Utente con id:" + id + " non presente."));
+        return repo.findById(id)
+                .map(stud -> mapper.toDTO(stud))
+                .orElseThrow(() -> new ResourceNotFoundException("Utente con id: " + id + " non presente."));
 
-		// Student stud = repo.findById(id).orElse(null);
-		// StudentDTO studDTO = new StudentDTO();
-		// // studDTO.setId(stud.getId());
-		// studDTO.setFirstName(stud.getFirstName());
-		// studDTO.setLastName(stud.getLastName());
-		// studDTO.setDateBr(stud.getDateBr());
-		// studDTO.setStuNum(stud.getStuNum());
-		// return studDTO;
-	}
+        // Student stud = repo.findById(id).orElse(null);
+        // StudentDTO studDTO = new StudentDTO();
+        // // studDTO.setId(stud.getId());
+        // studDTO.setFirstName(stud.getFirstName());
+        // studDTO.setLastName(stud.getLastName());
+        // studDTO.setDateBr(stud.getDateBr());
+        // studDTO.setStuNum(stud.getStuNum());
+        // return studDTO;
+    }
 
-	// ci andiamo a richiamare lo stuNum come identificativo
-	// se non esiste andiamo a crearci l'entità, ci settiamo i campi che riceviamo
-	// nella registrazione
-	// la salviamo e facciamo il return direttamente del DTO tramite il mapper che
-	// restituisce un oggetto di tipo
-	// studentDTO SENZA LA PASSWORD
-	@Override
-	public StudentDTO saveStudent(StudentRegisterRequest studReg) {
+    // ci andiamo a richiamare lo stuNum come identificativo
+    // se non esiste andiamo a crearci l'entità, ci settiamo i campi che riceviamo
+    // nella registrazione
+    // la salviamo e facciamo il return direttamente del DTO tramite il mapper che
+    // restituisce un oggetto di tipo
+    // studentDTO SENZA LA PASSWORD
+    @Transactional
+    @Override
+    public StudentDTO saveStudent(StudentRegisterRequest studReg) {
 
-		// al momento unica verifica sensata tramite il numero che deve essere univoco
-		// non chiedendo l'id
-		if (repo.findByStuNum(studReg.stuNum()).isPresent()) {
-			throw new DuplicateResourceException("Utente con identificativo" + studReg.stuNum() + " già esistente");
-		}
+        // al momento unica verifica sensata tramite il numero che deve essere univoco
+        // non chiedendo l'id
+        if (repo.findByStuNum(studReg.stuNum()).isPresent()) {
+            throw new DuplicateResourceException("Utente con identificativo " + studReg.stuNum() + " già esistente");
+        }
 
-		// creiamo un nuovo mapper che mappa la richiesta di registrazione in entità
-		Student student = mapper.toEntity(studReg);
+        // creiamo un nuovo mapper che mappa la richiesta di registrazione in entità
+        Student student = mapper.toEntity(studReg);
 
-		String cryptedPassword = passwordEncoder.encode(studReg.password());
-		student.setPassword(cryptedPassword);
+        String cryptedPassword = passwordEncoder.encode(studReg.password());
+        student.setPassword(cryptedPassword);
 
-		// student.setUsername(studReg.username());
-		// student.setPassword(studReg.password());
-		// student.setFirstName(studReg.firstName());
-		// student.setLastName(studReg.lastName());
-		// student.setDateBr(studReg.dateBr());
-		// student.setStuNum(studReg.stuNum());
+        // student.setUsername(studReg.username());
+        // student.setPassword(studReg.password());
+        // student.setFirstName(studReg.firstName());
+        // student.setLastName(studReg.lastName());
+        // student.setDateBr(studReg.dateBr());
+        // student.setStuNum(studReg.stuNum());
 
-		repo.save(student);
-		return mapper.toDTO(student);
-	}
+        repo.save(student);
+        return mapper.toDTO(student);
+    }
 
-	// SOFT_DELETE? per i casi di scuola è utile una volta eliminato uno studente
-	// avere in memoria i voti o esami a lui annessi
-	@Override
-	public void deleteStudent(Integer id) {
-		// verify o strategy? springboot
-		// se non viene trovato con quell'id viene sollevata un'eccezione, se lo trova
-		// procede e lo elimina dal repo
-		Student stud = repo.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Studente con id:" + id + " non trovato"));
-		repo.delete(stud);
-	}
+    // SOFT_DELETE? per i casi di scuola è utile una volta eliminato uno studente
+    // avere in memoria i voti o esami a lui annessi
+    @Override
+    public void deleteStudent(Integer id) {
+        // verify o strategy? springboot
+        // se non viene trovato con quell'id viene sollevata un'eccezione, se lo trova
+        // procede e lo elimina dal repo
+        Student stud = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Studente con id:" + id + " non trovato"));
+        repo.delete(stud);
+    }
 
-	// @Transactional , Hibernate si accorge da solo se hai cambiato i dati
-	// dell'oggetto student, forse potrebbe
-	// anche non servire il save(student)
+    // @Transactional , Hibernate si accorge da solo se hai cambiato i dati
+    // dell'oggetto student, forse potrebbe
+    // anche non servire il save(student)
 
-	// rimodernizzato, abbiamo tolto il return null perchè se non lo trova solleva
-	// direttamente un'eccezione
-	// se lo trova invece vuol dire che non è entrato nell'eccezione e possiamo
-	// direttamente settarli i param che ci fornisce l'utente
+    // rimodernizzato, abbiamo tolto il return null perchè se non lo trova solleva
+    // direttamente un'eccezione
+    // se lo trova invece vuol dire che non è entrato nell'eccezione e possiamo
+    // direttamente settarli i param che ci fornisce l'utente
 
-	@Override
-	public StudentDTO updateStudent(Integer id, StudentDTO newStudent) {
-		Student student = repo.findById(id)
-				.orElseThrow(
-						() -> new ResourceNotFoundException("Studente con id:" + id + " non presente."));
+    @Override
+    public StudentDTO updateStudent(Integer id, StudentDTO newStudent) {
+        Student student = repo.findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Studente con id:" + id + " non presente."));
 
-		student.setUsername(newStudent.username());
-		student.setFirstName(newStudent.firstName());
-		student.setLastName(newStudent.lastName());
-		student.setStuNum(newStudent.stuNum());
-		student.setDateBr(newStudent.dateBr());
+        student.setUsername(newStudent.username());
+        student.setFirstName(newStudent.firstName());
+        student.setLastName(newStudent.lastName());
+        student.setStuNum(newStudent.stuNum());
+        student.setDateBr(newStudent.dateBr());
 
-		Student updatedStud = repo.save(student);
+        Student updatedStud = repo.save(student);
 
-		return mapper.toDTO(updatedStud);
-		// studDTO.setId(updatedStudent.getId());
-	}
-
-	public boolean login(String username, String password) {
-
-		Optional<Student> stud = repo.findByUsernameAndPassword(username, password);
-
-		if (stud.isEmpty())
-			return false;
-		if (!stud.get().getPassword().equals(password) && !stud.get().getUsername().equals(username))
-			return false;
-
-		return true;
-
-	}
+        return mapper.toDTO(updatedStud);
+        // studDTO.setId(updatedStudent.getId());
+    }
 
 }

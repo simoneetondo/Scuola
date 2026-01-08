@@ -20,8 +20,5 @@ public interface IStudent {
 		// in input si 
 		public StudentDTO updateStudent(Integer id, StudentDTO newStudent);
 
-		// 
-
-		public boolean login(String username, String password);
-
+		//
 }

@@ -11,10 +11,10 @@ Content-Type: application/json
 
 {
     "username": "Flavietto",
-    "password" : "lollo1234!",
+    "password" : "lollo",
     "firstName": "Flavio",
     "lastName": "Stincone",
-    "stuNum": "329716618",
+    "stuNum": "329716683",
     "dateBr": "2025-06-10"
 }
 

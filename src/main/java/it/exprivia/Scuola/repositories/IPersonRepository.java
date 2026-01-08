@@ -17,6 +17,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface IPersonRepository<T> extends JpaRepository<T, Integer> {
     // creiamo il metodo su IPerson perchè lo implementano sia teacher sia student
-    Optional<T> findByUsernameAndPassword(String username, String password);
+    Optional<T> findByUsername(String username);
 
 }

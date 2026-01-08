@@ -101,16 +101,4 @@ public class TeacherServiceImpl implements ITeacher {
 
     }
 
-    public boolean login(String username, String password) {
-
-        Optional<Teacher> teach = repo.findByUsernameAndPassword(username, password);
-
-        if (teach.isEmpty())
-            return false;
-        if (!teach.get().getPassword().equals(password) && !teach.get().getUsername().equals(username))
-            return false;
-
-        return true;
-
-    }
 }
