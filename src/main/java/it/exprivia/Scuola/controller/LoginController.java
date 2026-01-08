@@ -18,11 +18,10 @@ public class LoginController {
     @Autowired
     private ILogin loginService;
 
-    @PostMapping
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-
-
-    }
+//    @PostMapping
+//    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+//
+//    }
 
 
 }
