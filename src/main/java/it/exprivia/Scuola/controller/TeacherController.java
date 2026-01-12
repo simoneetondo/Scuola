@@ -2,6 +2,7 @@ package it.exprivia.Scuola.controller;
 
 import java.util.List;
 
+import it.exprivia.Scuola.models.dto.TeacherRegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,13 +47,13 @@ public class TeacherController {
     }
 
     @PostMapping("")
-    public ResponseEntity<TeacherDTO> createTeacher(@RequestBody TeacherDTO teachDTO) {
+    public ResponseEntity<TeacherDTO> createTeacher(@RequestBody TeacherRegisterRequest teachDTO) {
         TeacherDTO createdTeach = service.saveTeacher(teachDTO);
         return new ResponseEntity<>(createdTeach, HttpStatus.CREATED);
 
         // if (savedTeachDto != null) {
         // // URI localUri = URI.create("api/students/" + savedTeachDto.getId());
-        // // return ResponseEntity.created(localUri).body(savedTeachDto);
+        // // return ResponseEntity.creeeeated(localUri).body(savedTeachDto);
         // return ResponseEntity.ok(savedTeachDto);
         // // best practirce crersi l'uri per i nuovi studenti
         // }

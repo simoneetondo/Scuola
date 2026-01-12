@@ -22,8 +22,8 @@ public class Teacher extends Person {
 
 	// costruttore con parametri che chiedi al momento della registrazione 
 
-	public Teacher(String username, String password, String firstName, String lastName, String teacherSub) {
-		super(username, password,firstName, lastName);
+	public Teacher(String email, String username, String password, String firstName, String lastName, String teacherSub) {
+		super(email, username, password,firstName, lastName);
 		this.teacherSub = teacherSub;
 	}	
 

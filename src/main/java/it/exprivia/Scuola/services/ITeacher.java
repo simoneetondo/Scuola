@@ -3,6 +3,7 @@ package it.exprivia.Scuola.services;
 import java.util.List;
 
 import it.exprivia.Scuola.models.dto.TeacherDTO;
+import it.exprivia.Scuola.models.dto.TeacherRegisterRequest;
 
 public interface ITeacher {
 
@@ -12,7 +13,7 @@ public interface ITeacher {
 
     public void deleteTeacher(Integer id);
 
-    public TeacherDTO saveTeacher(TeacherDTO teachDTO);
+    public TeacherDTO saveTeacher(TeacherRegisterRequest teachDTO);
 
     // qualora dovessimo modificare la materia dell'insegnante
     

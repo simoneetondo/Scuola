@@ -35,6 +35,7 @@ public class GlobalExceptionHandler {
         pd.setTitle("Duplicated Resource");
         pd.setProperty("errorCode", "DUPLICATE_ERROR");
 
+
         return pd;
     }
 

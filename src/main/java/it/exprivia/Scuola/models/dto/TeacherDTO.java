@@ -13,6 +13,7 @@ package it.exprivia.Scuola.models.dto;
 // @Setter
 public record TeacherDTO(
     Integer id,
+    String email,
     String username,
     String firstName,
     String lastName,

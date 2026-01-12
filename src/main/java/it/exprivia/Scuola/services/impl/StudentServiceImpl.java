@@ -3,6 +3,7 @@ package it.exprivia.Scuola.services.impl;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,23 +19,24 @@ import it.exprivia.Scuola.repositories.StudentRepository;
 import it.exprivia.Scuola.services.IStudent;
 
 @Service
+@RequiredArgsConstructor // vedere commenti login
 public class StudentServiceImpl implements IStudent {
 
-    @Autowired
-    private StudentRepository repo;
-    private StudentMapper mapper;
-    private BCryptPasswordEncoder passwordEncoder;
+    //    @Autowired
+    private final StudentMapper mapper;
+    private final StudentRepository repo;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     // utilizzare il costruttore per l'iniezione delle dependency
     // Problema: il test crea new StudentServiceImpl(studentMapperMock,
     // studentRepositoryMock ma la classe non ha quel costruttore, quindi il
     // compilatore segnala l'errore.
 
-    public StudentServiceImpl(StudentMapper mapper, StudentRepository repo, BCryptPasswordEncoder passwordEncoder) {
-        this.mapper = mapper;
-        this.repo = repo;
-        this.passwordEncoder = passwordEncoder;
-    }
+//    public StudentServiceImpl(StudentMapper mapper, StudentRepository repo, BCryptPasswordEncoder passwordEncoder) {
+//        this.mapper = mapper;
+//        this.repo = repo;
+//        this.passwordEncoder = passwordEncoder;
+//    }
 
     // bisogna utilizzare il mapper se lo si vuole utilizzare anche nei test
 
@@ -53,8 +55,8 @@ public class StudentServiceImpl implements IStudent {
         // se lo studente viene trovato lo mappa direttamente in dto altrimenti scatena
         // eccezione
 
-        return repo.findById(id)
-                .map(stud -> mapper.toDTO(stud))
+        return repo.findById(id).map(stud -> mapper.toDTO(stud))
+                // .map(mapper::toDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Utente con id: " + id + " non presente."));
 
         // Student stud = repo.findById(id).orElse(null);
@@ -68,19 +70,17 @@ public class StudentServiceImpl implements IStudent {
     }
 
     // ci andiamo a richiamare lo stuNum come identificativo
-    // se non esiste andiamo a crearci l'entità, ci settiamo i campi che riceviamo
-    // nella registrazione
+    // se non esiste andiamo a crearci l'entità, ci settiamo i campi che riceviamo nella registrazione
     // la salviamo e facciamo il return direttamente del DTO tramite il mapper che
-    // restituisce un oggetto di tipo
-    // studentDTO SENZA LA PASSWORD
+    // restituisce un oggetto di tipo studentDTO SENZA LA PASSWORD
     @Transactional
     @Override
     public StudentDTO saveStudent(StudentRegisterRequest studReg) {
 
         // al momento unica verifica sensata tramite il numero che deve essere univoco
         // non chiedendo l'id
-        if (repo.findByStuNum(studReg.stuNum()).isPresent()) {
-            throw new DuplicateResourceException("Utente con identificativo " + studReg.stuNum() + " già esistente");
+        if (repo.findByStuNum(studReg.stuNum()).isPresent() || repo.findByEmail(studReg.email()).isPresent()) {
+            throw new DuplicateResourceException("Utente con identificativo " + studReg.stuNum() + " o email " + studReg.email() + " già esistente");
         }
 
         // creiamo un nuovo mapper che mappa la richiesta di registrazione in entità
@@ -107,8 +107,7 @@ public class StudentServiceImpl implements IStudent {
         // verify o strategy? springboot
         // se non viene trovato con quell'id viene sollevata un'eccezione, se lo trova
         // procede e lo elimina dal repo
-        Student stud = repo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Studente con id:" + id + " non trovato"));
+        Student stud = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Studente con id:" + id + " non trovato"));
         repo.delete(stud);
     }
 
@@ -123,15 +122,26 @@ public class StudentServiceImpl implements IStudent {
 
     @Override
     public StudentDTO updateStudent(Integer id, StudentDTO newStudent) {
-        Student student = repo.findById(id)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Studente con id:" + id + " non presente."));
+        Student student = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Studente con id:" + id + " non presente."));
 
-        student.setUsername(newStudent.username());
-        student.setFirstName(newStudent.firstName());
-        student.setLastName(newStudent.lastName());
-        student.setStuNum(newStudent.stuNum());
-        student.setDateBr(newStudent.dateBr());
+        repo.findByEmail(newStudent.email())
+                .filter(s -> !s.getId().equals(id))
+                .ifPresent(s -> {
+                    throw new DuplicateResourceException("Email " + newStudent.email() + " già in uso.");
+                });
+
+        repo.findByStuNum(newStudent.stuNum())
+                .filter(s -> !s.getId().equals(id))
+                .ifPresent(s -> {
+                    throw new DuplicateResourceException("Identificativo " + newStudent.stuNum() + " già presente.");
+                });
+
+        mapper.updateStudentFromDTO(newStudent, student);
+//        student.setUsername(newStudent.username());
+//        student.setFirstName(newStudent.firstName());
+//        student.setLastName(newStudent.lastName());
+//        student.setStuNum(newStudent.stuNum());
+//        student.setDateBr(newStudent.dateBr());
 
         Student updatedStud = repo.save(student);
 

@@ -63,12 +63,12 @@ class StudentServiceTests {
             // given
 
             List<Student> studentsEnt = new ArrayList<>();
-            studentsEnt.add(new Student(null, null, null, null, null, null));
-            studentsEnt.add(new Student(null, null, null, null, null, null));
+            studentsEnt.add(new Student(null, null, null, null, null, null, null));
+            studentsEnt.add(new Student(null, null, null, null, null, null, null));
 
             List<StudentDTO> studentDtos = new ArrayList<>();
-            studentDtos.add(new StudentDTO(1, null, null, null, null, null));
-            studentDtos.add(new StudentDTO(2, null, null, null, null, null));
+            studentDtos.add(new StudentDTO(1, null,null, null, null, null, null));
+            studentDtos.add(new StudentDTO(2, null,  null, null, null, null, null));
 
             when(studentRepositoryMock.findAll()).thenReturn(studentsEnt);
             when(studentMapperMock.toDTOList(studentsEnt)).thenReturn(studentDtos);
@@ -134,8 +134,8 @@ class StudentServiceTests {
         @Test
         void should_ReturnCorrectDTO_WhenStudentExist() {
             // given
-            Student stud = new Student(null, null, "Simone", "Tondo", "T001", null);
-            StudentDTO expectedDTO = new StudentDTO(1, null, "Simone", "Tondo", "T001", null);
+            Student stud = new Student(null, null, null, "Simone", "Tondo", "T001", null);
+            StudentDTO expectedDTO = new StudentDTO(1, null,  null, "Simone", "Tondo", "T001", null);
 
             // configurazione mock
             when(studentRepositoryMock.findById(1)).thenReturn(Optional.of(stud));
@@ -157,7 +157,7 @@ class StudentServiceTests {
         @Test
         void should_ThrowException_WhenDatabaseError() {
             //given
-            Student student = new Student("Simone", null, null, null, null, null);
+            Student student = new Student(null, "Simone", null, null, null, null, null);
             when(studentRepositoryMock.findById(1)).thenReturn(Optional.of(student));
             //when
             // facciamo esplodere il db per simulare un errore e vediamo come si comporta il service
@@ -171,7 +171,7 @@ class StudentServiceTests {
         @Test
         void should_DeleteStudent_WhenStudentExist() {
             // given
-            Student stud = new Student("enrico", null, null, null, null, null);
+            Student stud = new Student(null, "enrico", null, null, null, null, null);
 
             when(studentRepositoryMock.findById(1)).thenReturn(Optional.of(stud));
 
@@ -204,8 +204,8 @@ class StudentServiceTests {
         @Test
         void should_NotEncodeAndSave_WhenStuNumberDuplicated() {
             // given
-            StudentRegisterRequest input = new StudentRegisterRequest("xxx", "pwd","simone","tondo","t001,",LocalDate.of(2025,10,10));
-            Student existingStudent= new Student("xxx","xxx","t001",null,null,null);
+            StudentRegisterRequest input = new StudentRegisterRequest(null, "xxx", "pwd","simone","tondo","t001,",LocalDate.of(2025,10,10));
+            Student existingStudent= new Student(null, "xxx","xxx","t001",null,null,null);
 
             when(studentRepositoryMock.findByStuNum("t001")).thenReturn(Optional.of(existingStudent));
 
@@ -222,9 +222,9 @@ class StudentServiceTests {
         void should_SaveStudent_AndEncodePassword()
         {
             // given
-            StudentRegisterRequest input = new StudentRegisterRequest("Simone", "xxx1", "Simone", "Tondo", "T001", LocalDate.of(2025, 10, 12));
-            Student savedStudent = new Student("Simone", "xxx1", "Simone", "Tondo", "T001", LocalDate.of(2025, 10, 12));
-            StudentDTO expectedDTO = new StudentDTO(1, "Simone", "Simone", "Tondo", "T001", LocalDate.of(2025, 10, 12));
+            StudentRegisterRequest input = new StudentRegisterRequest(null, "Simone", "xxx1", "Simone", "Tondo", "T001", LocalDate.of(2025,10,12));
+            Student savedStudent = new Student(null, "Simone", "xxx1", "Simone", "Tondo", "T001", LocalDate.of(2025, 10, 12));
+            StudentDTO expectedDTO = new StudentDTO(1, null,"Simone", "Simone", "Tondo", "T001", LocalDate.of(2025, 10, 12));
 
             when(studentRepositoryMock.findByStuNum(anyString())).thenReturn(Optional.empty());
             when(studentPasswordEncoder.encode(anyString())).thenReturn("encodedPwd");
@@ -248,9 +248,9 @@ class StudentServiceTests {
         @Test
         void should_SaveStudent_WhenValidDto() {
             // given
-            StudentRegisterRequest input = new StudentRegisterRequest("Flavio", null, null, null, "T001", null);
-            Student savedStudent = new Student("Flavio", null, null, null, "T001", null);
-            StudentDTO expectedDTO = new StudentDTO(1, "Flavio", null, null, "T001", null);
+            StudentRegisterRequest input = new StudentRegisterRequest(null, "Flavio", null, null, null, "T001", null);
+            Student savedStudent = new Student(null, "Flavio", null, null, null, "T001", null);
+            StudentDTO expectedDTO = new StudentDTO(1, null,"Flavio", null, null, "T001", null);
 
             // when
             when(studentRepositoryMock.findByStuNum(input.stuNum())).thenReturn(Optional.empty()); // controllo
@@ -274,8 +274,8 @@ class StudentServiceTests {
         @Test
         void should_ThrowException_WhenStuNumberDuplicated() {
             // given
-            StudentRegisterRequest input = new StudentRegisterRequest("Flavio", null, null, null, "T001", null);
-            Student existingStudent = new Student("Lorenzo", null, null, null, "T001", null);
+            StudentRegisterRequest input = new StudentRegisterRequest(null,"Flavio", null, null, null, "T001", null);
+            Student existingStudent = new Student(null, "Lorenzo", null, null, null, "T001", null);
 
             // when
 
@@ -295,10 +295,10 @@ class StudentServiceTests {
         @Test
         void should_UpdateStudent_WhenStudentExist() {
             // given
-            StudentDTO input = new StudentDTO(1, "Simone", "TondoModificato", null, null, null); // contiene i dati che
+            StudentDTO input = new StudentDTO(1, null,"Simone", "TondoModificato", null, null, null); // contiene i dati che
             // vogliamo modificare
 
-            Student existingStudent = new Student("Enrico", null, null, null, null, null); // oggetto salvato
+            Student existingStudent = new Student(null, "Enrico", null, null, null, null, null); // oggetto salvato
             // attualmente
             // nel db esistente
 
@@ -327,7 +327,7 @@ class StudentServiceTests {
         void should_ThrowException_WhenIdNotExist() {
             // given
             Integer notExisting = 100;
-            StudentDTO casual = new StudentDTO(notExisting, "user", "name", "lastname", "T001",
+            StudentDTO casual = new StudentDTO(notExisting,null,  "user", "name", "lastname", "T001",
                     LocalDate.of(2025, 10, 12));
 
             when(studentRepositoryMock.findById(notExisting)).thenReturn(Optional.empty());

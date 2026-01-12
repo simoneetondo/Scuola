@@ -1,5 +1,7 @@
 package it.exprivia.Scuola.models.dto;
 
+import jakarta.validation.constraints.Email;
+
 import java.time.LocalDate;
 
 // import java.sql.Date;
@@ -25,9 +27,16 @@ import java.time.LocalDate;
 // @Setter
 // @EqualsAndHashCode(exclude = {"username", "password"})
 
-public record StudentDTO(Integer id, String username, String firstName, String lastName, String stuNum,
-                LocalDate dateBr)
-                implements PersonDTO {
+public record StudentDTO(
+        Integer id,
+        @Email
+        String email,
+        String username,
+        String firstName,
+        String lastName,
+        String stuNum,
+        LocalDate dateBr)
+        implements PersonDTO {
 }
 
 // valgono solo per le entità non per i dto

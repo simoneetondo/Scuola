@@ -27,8 +27,8 @@ public class Student extends Person {
 
 	// costruttore con param
 	// Non si utilizza piu Date perchè è deprecato, si utilizza LocalDate / LocalDateTime
-	public Student(String username, String password, String firstName, String lastName, String stuNum, LocalDate dateBr) {
-		super(username, password, firstName, lastName);
+	public Student(String email, String username, String password, String firstName, String lastName, String stuNum, LocalDate dateBr) {
+		super(email, username, password, firstName, lastName);
 		this.stuNum = stuNum;
 		this.dateBr = dateBr;
 	}
