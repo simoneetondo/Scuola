@@ -12,9 +12,12 @@ POST http://127.0.0.1:8080/api/teachers
 Content-Type: application/json
 
 {
-    "firstName": "Lucia",
-    "lastName": "Tundo",
-    "teacherSub": "Matematica"
+  "email": "tr.simone@gmail.com",
+  "username": "Lucy",
+  "password": "Lucia1234!",
+  "firstName": "Lucia",
+  "lastName": "Milelli",
+  "teacherSub": "Matematica"
 }
 
 ###

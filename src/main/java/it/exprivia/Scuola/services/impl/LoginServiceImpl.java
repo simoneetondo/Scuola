@@ -35,6 +35,7 @@ public class LoginServiceImpl implements ILogin {
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final StudentRepository studentRepo;
+    private final JwtService jwtService;
     private final TeacherRepository teacherRepo;
     private final StudentMapper studentMapper;
     private final TeacherMapper teacherMapper;
@@ -62,7 +63,6 @@ public class LoginServiceImpl implements ILogin {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-
         // cerchiamo lo studente
         Optional<Student> studOpt = studentRepo.findByUsername(loginRequest.username());
         if (studOpt.isPresent()) {
@@ -70,7 +70,9 @@ public class LoginServiceImpl implements ILogin {
             if (!passwordEncoder.matches(loginRequest.password(), stud.getPassword())) {
                 throw new UnauthorizedException("Username o password errati.");
             }
-            return new LoginResponse("Login effettuato con successo", "STUDENT", studentMapper.toDTO(stud));
+            // AGGIUNTA TOKEN JWT 13/01
+            String token = jwtService.generateToken(stud.getUsername(), "STUDENT");
+            return new LoginResponse("Login effettuato con successo", "STUDENT", token ,studentMapper.toDTO(stud));
         }
 
         Optional<Teacher> teachOpt = teacherRepo.findByUsername(loginRequest.username());
@@ -79,7 +81,9 @@ public class LoginServiceImpl implements ILogin {
             if (!passwordEncoder.matches(loginRequest.password(), teach.getPassword())) {
                 throw new UnauthorizedException("Username o password errati.");
             }
-            return new LoginResponse("Login effettuato con successo", "TEACHER", teacherMapper.toDTO(teach));
+            // AGGIUNTA TOKEN JWT 13/01
+            String token = jwtService.generateToken(teach.getUsername(), "TEACHER");
+            return new LoginResponse("Login effettuato con successo", "TEACHER", token, teacherMapper.toDTO(teach));
         }
 
         throw new UnauthorizedException("Username o password errati.");

@@ -7,5 +7,6 @@ package it.exprivia.Scuola.models.dto;
 public record LoginResponse(
         String message,
         String role,
+        String token,
         PersonDTO user) {
 }

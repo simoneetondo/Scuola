@@ -79,9 +79,13 @@ public class StudentServiceImpl implements IStudent {
 
         // al momento unica verifica sensata tramite il numero che deve essere univoco
         // non chiedendo l'id
-        if (repo.findByStuNum(studReg.stuNum()).isPresent() || repo.findByEmail(studReg.email()).isPresent()) {
-            throw new DuplicateResourceException("Utente con identificativo " + studReg.stuNum() + " o email " + studReg.email() + " già esistente");
-        }
+        repo.findByEmail(studReg.email()).ifPresent(s -> {
+            throw new DuplicateResourceException("Email " + studReg.email() + " già esistente");
+        });
+
+        repo.findByUsername(studReg.username()).ifPresent(s -> {
+            throw new DuplicateResourceException("Username " + studReg.username() + " già esistente");
+        });
 
         // creiamo un nuovo mapper che mappa la richiesta di registrazione in entità
         Student student = mapper.toEntity(studReg);
