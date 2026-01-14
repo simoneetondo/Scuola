@@ -1,7 +1,6 @@
-package it.exprivia.Scuola.config;
+package it.exprivia.Scuola.security;
 
 
-import it.exprivia.Scuola.services.impl.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,16 +13,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticatorFilter extends OncePerRequestFilter {
 
+    // SECURITY CHAIN
+
+    // CONCETTO STATELESS:
+    // il server non ricorda chi sei tra una chiamata e l'altra ma deve verificare ogni volta il token
     private final JwtService jwtService;
 
     @Override
@@ -49,7 +50,7 @@ public class JwtAuthenticatorFilter extends OncePerRequestFilter {
         // estrarre username utilizzando il service di jwtService
         username = jwtService.extractUsername(jwt);
 
-        // capiamo se abbiamo l'usernatme e l'utente non è già autenticato nella richiesta
+        // capiamo se abbiamo l'username e l'utente non è già autenticato nella richiesta
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             // verifichiamo che il token NON sia scaduto

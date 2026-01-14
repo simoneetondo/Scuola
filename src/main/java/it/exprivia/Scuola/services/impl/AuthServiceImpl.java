@@ -9,10 +9,9 @@ import it.exprivia.Scuola.models.entity.Student;
 import it.exprivia.Scuola.models.entity.Teacher;
 import it.exprivia.Scuola.repositories.StudentRepository;
 import it.exprivia.Scuola.repositories.TeacherRepository;
+import it.exprivia.Scuola.security.JwtService;
 import it.exprivia.Scuola.services.ILogin;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor // genera i costruttori con tutti i campi final
-public class LoginServiceImpl implements ILogin {
+public class AuthServiceImpl implements ILogin {
 
     // 1. quando mettiamo final ci assicuriamo che non può essere piu cambiato
 
@@ -42,7 +41,7 @@ public class LoginServiceImpl implements ILogin {
 
 
     // Costruttore per la Dependency Injection
-//    public LoginServiceImpl(BCryptPasswordEncoder passwordEncoder,
+//    public AuthServiceImpl(BCryptPasswordEncoder passwordEncoder,
 //                            StudentRepository studentRepo,
 //                            TeacherRepository teacherRepo,
 //                            StudentMapper studentMapper,
@@ -92,6 +91,8 @@ public class LoginServiceImpl implements ILogin {
         // spostare il saveStudent/teacher in un service a parte e chiamarlo register
     }
 }
+
+
 
 //        Student stud = studentRepo.findByUsername(username).
 //                orElseThrow(() -> new UnauthorizedException("Username o password errati."));
