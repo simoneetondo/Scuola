@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("simple-test")
-class ScuolaApplicationTests {
+class dockScuolaApplicationTests {
 
 	@Test
 	void contextLoads() {
