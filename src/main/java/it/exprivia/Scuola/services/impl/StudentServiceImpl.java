@@ -1,10 +1,8 @@
 package it.exprivia.Scuola.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +26,7 @@ public class StudentServiceImpl implements IStudent {
     private final BCryptPasswordEncoder passwordEncoder;
 
     // utilizzare il costruttore per l'iniezione delle dependency
-    // Problema: il test crea new StudentServiceImpl(studentMapperMock,
+    // Problema: il test crea new StudentServiceImpl (studentMapperMock,
     // studentRepositoryMock ma la classe non ha quel costruttore, quindi il
     // compilatore segnala l'errore.
 
@@ -43,6 +41,7 @@ public class StudentServiceImpl implements IStudent {
     @Override
     public List<StudentDTO> getStudents() {
         return mapper.toDTOList(repo.findAll());
+
 
         // List<StudentDTO> dtos = mapper.toDTOList(repo.findAll());
         // return dtos;

@@ -1,13 +1,10 @@
 package it.exprivia.Scuola.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import it.exprivia.Scuola.exception.DuplicateResourceException;
 import it.exprivia.Scuola.models.dto.TeacherRegisterRequest;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +14,6 @@ import it.exprivia.Scuola.models.dto.TeacherDTO;
 import it.exprivia.Scuola.models.entity.Teacher;
 import it.exprivia.Scuola.repositories.TeacherRepository;
 import it.exprivia.Scuola.services.ITeacher;
-import jakarta.annotation.Resource;
 
 @Service
 @RequiredArgsConstructor
@@ -63,7 +59,7 @@ public class TeacherServiceImpl implements ITeacher {
         return repo.findById(id)
                 .map(teach -> mapper.toDTO(teach))
                 // .map(mapper::toDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Utente con id:" + id + " non esistente."));
+                .orElseThrow(() -> new ResourceNotFoundException("Utente con id: " + id + " non esistente."));
     }
 
     @Override

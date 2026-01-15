@@ -10,13 +10,13 @@ POST http://127.0.0.1:8080/api/students
 Content-Type: application/json
 
 {
-    "email": "tr.giancarlo@gmail.com",
-    "username": "Flavietto",
-    "password" : "Lollo1234!",
-    "firstName": "Flavio",
-    "lastName": "Stincone",
-    "stuNum": "456",
-    "dateBr": "2025-06-10"
+  "email": "tr.giancarlo@gmail.com",
+  "username": "Flavietto",
+  "password": "Lollo1234!",
+  "firstName": "Flavio",
+  "lastName": "Stincone",
+  "stuNum": "456",
+  "dateBr": "2025-06-10"
 }
 
 ###
@@ -24,37 +24,38 @@ POST http://127.0.0.1:8080/api/students
 Content-Type: application/json
 
 {
-"email": "tr.dario@gmail.com",
-"username": "DarioD",
-"password" : "DarioD1234!",
-"firstName": "Dario",
-"lastName": "Tundo",
-"stuNum": "123",
-"dateBr": "2025-06-10"
+  "email": "tr.dario@gmail.com",
+  "username": "DarioD",
+  "password": "DarioD1234!",
+  "firstName": "Dario",
+  "lastName": "Tundo",
+  "stuNum": "123",
+  "dateBr": "2025-06-10"
 }
-
 ###
-POST http://127.0.0.1:8081/login
+POST http://127.0.0.1:8080/api/students
 Content-Type: application/json
 
 {
-  "username": "admin",
-  "password" : "password123"
+"email": "tr.alberto@gmail.com",
+"username": "alberto",
+"password": "Password123!",
+"firstName": "alberto",
+"lastName": "rossi",
+"stuNum": "123",
+"dateBr": "2025-06-10"
 }
-
-
-
 
 ###
 PUT http://127.0.0.1:8080/api/students/2
 Content-Type: application/json
 
 {
-    "email": "tr.giancarlo@gmail.com",
-    "firstName": "Simone",
-    "lastName": "Tundo",
-    "stuNum": "329716",
-    "dateBr": "2025-06-10"
+  "email": "tr.giancarlo@gmail.com",
+  "firstName": "Simone",
+  "lastName": "Tundo",
+  "stuNum": "123",
+  "dateBr": "2025-06-10"
 }
 
 ###

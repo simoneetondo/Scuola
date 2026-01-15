@@ -2,7 +2,6 @@ package it.exprivia.Scuola.controller;
 
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import it.exprivia.Scuola.models.dto.StudentDTO;
 import it.exprivia.Scuola.models.dto.StudentRegisterRequest;
 import it.exprivia.Scuola.services.IStudent;
-import it.exprivia.Scuola.services.impl.StudentServiceImpl;
 import jakarta.validation.Valid;
 
 @RestController
@@ -32,6 +30,9 @@ public class StudentController {
     // inserire un oggetto di tipo DTO e mapparlo nel service
 
     // GET ALL
+
+
+    // inserire @operation e studiare sweagger
     @GetMapping("")
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<List<StudentDTO>> getStudents() {
