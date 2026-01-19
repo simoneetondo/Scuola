@@ -118,6 +118,4 @@ OGGETTO PERSON IN USER E SETTARE MEGLIO RUOLI E PERMESSI
 - vedere cod
 - capire cosa fare, se posso continuare in questo modo o c'è qualcosa in particoalre
 
-volevo costruire il docker compose per spring, e averlo in modo tale da far utilizzare l'app da qualunque pc
 
-ma si utilizza meglio in questo modo o meglio runnarlo dai profilid ell'ide?

@@ -20,4 +20,6 @@ public interface IPersonRepository<T> extends JpaRepository<T, Integer> {
     Optional<T> findByUsername(String username);
     Optional<T> findByEmail(String email);
 
+    // concatenare altri metodi comuni
+
 }
