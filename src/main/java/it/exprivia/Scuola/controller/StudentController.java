@@ -2,6 +2,10 @@ package it.exprivia.Scuola.controller;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.models.annotations.OpenAPI30;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +35,13 @@ public class StudentController {
 
     // GET ALL
 
-
+    // sono tutte annotaion che servono per documentare le api con swagger
+    @Operation(
+            summary = "Recupera tuitti gli studenti",
+            description = "Recupera la lista di tutti gli studenti presenti nel sistema"
+    )
+    @ApiResponse(responseCode = "200", description = "Elenco degli studenti recuperato con successo")
+    @ApiResponse(responseCode = "403", description = "Accesso negato")
     // inserire @operation e studiare sweagger
     @GetMapping("")
     @PreAuthorize("hasRole('STUDENT')")
@@ -40,21 +50,39 @@ public class StudentController {
 
     }
 
+    @Operation(
+            summary = "Recupera uno studente per ID",
+            description = "Recupera i dettagli di uno studente specifico utilizzando il suo ID univoco"
+    )
+    @ApiResponse(responseCode = "200", description = "Studente recuperato con successo")
+    @ApiResponse(responseCode = "404", description = "Studente non trovato")
     // GET BY ID
     @GetMapping("{id}")
     @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<StudentDTO> getStudent(@PathVariable Integer id) {
+    public ResponseEntity<StudentDTO> getStudent(
+            @Parameter(description = "ID univoco dello studente", example = "1")
+            @PathVariable Integer id) {
         return ResponseEntity.ok(service.getStudent(id));
     }
 
+
+    @Operation(
+            summary = "Elimina uno studente per ID",
+            description = "Elimina uno studente specifico utilizzando il suo ID univoco"
+    )
+    // DELETE
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<Void> deleteStudent(@PathVariable Integer id) {
         service.deleteStudent(id);
         return ResponseEntity.noContent().build();
-
     }
 
+    @Operation(
+            summary = "Crea un nuovo studente",
+            description = "Crea un nuovo studente nel sistema con i dettagli forniti"
+    )
+    // CREATE
     @PostMapping("")
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<StudentDTO> createStudent(@Valid @RequestBody StudentRegisterRequest stud) {

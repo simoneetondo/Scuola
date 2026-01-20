@@ -145,28 +145,6 @@
 
         <plugins>
 
-            <!-- jacoco code coverage test  -->
-
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.11</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -264,7 +242,7 @@
         </profile>
 
         <profile>
-            <id>simple-test</id>
+            <id>test</id>
             <properties>
                 <db.driverClassName>org.h2.Driver</db.driverClassName>
                 <db.url>jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1</db.url>
@@ -286,13 +264,40 @@
 
             <build>
                 <plugins>
+
+                    <!-- jacoco code coverage test  -->
+
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.0.0-M9</version>
-                        <configuration>
-                            <excludedGroups>slow-integration</excludedGroups>
-                        </configuration>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.11</version>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <excludes>
+                                        <exclude>it/exprivia/Scuola/models/dto/**</exclude>
+                                        <exclude>it/exprivia/Scuola/models/abstracts/**</exclude>
+                                        <exclude>it/exprivia/Scuola/config/**</exclude>
+                                        <exclude>it/exprivia/Scuola/models/entity/**</exclude>
+                                        <exclude>it/exprivia/Scuola/exception/**</exclude>
+                                        <exclude>it/exprivia/Scuola/mapper/**</exclude>
+                                        <exclude>**/*DTO.*</exclude>
+                                        <exclude>**/*Entity.*</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

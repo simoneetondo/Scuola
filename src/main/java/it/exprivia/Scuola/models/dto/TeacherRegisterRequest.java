@@ -1,5 +1,6 @@
 package it.exprivia.Scuola.models.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -22,6 +23,7 @@ public record TeacherRegisterRequest(
         )
         String password,
 
+        @Schema(description = "Nome completo dell'utente", example = "Mario ")
         @NotBlank(message = "Il campo è obbligatorio")
         @Size(min=2, max=30, message="Il nome deve essere lungo almeno 2 caratteri e massimo 30.")
         String firstName,
