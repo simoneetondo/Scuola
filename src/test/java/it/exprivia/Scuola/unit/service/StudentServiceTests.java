@@ -1,10 +1,7 @@
-package it.exprivia.Scuola;
+package it.exprivia.Scuola.unit.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -16,14 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.tomcat.util.file.ConfigurationSource.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import it.exprivia.Scuola.config.SecurityConfig;
 import it.exprivia.Scuola.exception.DuplicateResourceException;
 import it.exprivia.Scuola.exception.ResourceNotFoundException;
 import it.exprivia.Scuola.mapper.StudentMapper;
@@ -64,7 +59,7 @@ class StudentServiceTests {
 
             List<Student> studentsEnt = new ArrayList<>();
             studentsEnt.add(new Student(null, null, null, null, null, null, null, null));
-            studentsEnt.add(new Student(null,null, null, null, null, null, null, null));
+            studentsEnt.add(new Student(null, null, null, null, null, null, null, null));
 
             List<StudentDTO> studentDtos = new ArrayList<>();
             studentDtos.add(new StudentDTO(1, null, null, null, null, null, null));
@@ -134,7 +129,7 @@ class StudentServiceTests {
         @Test
         void should_ReturnCorrectDTO_WhenStudentExist() {
             // given
-            Student stud = new Student(null , null, null, null, "Simone", "Tondo", "T001", null);
+            Student stud = new Student(null, null, null, null, "Simone", "Tondo", "T001", null);
             StudentDTO expectedDTO = new StudentDTO(1, null, null, "Simone", "Tondo", "T001", null);
 
             // configurazione mock
@@ -171,8 +166,8 @@ class StudentServiceTests {
         @Test
         void should_DeleteStudent_WhenStudentExist() {
             // given
-            Student stud = new Student(null , null, "enrico", null, null, null, null, null);
-
+            Student stud = new Student();
+            stud.setUsername("enrico");
             when(studentRepositoryMock.findById(1)).thenReturn(Optional.of(stud));
 
             // when
@@ -205,9 +200,9 @@ class StudentServiceTests {
         void should_NotEncodeAndSave_WhenStuNumberDuplicated() {
             // given
             StudentRegisterRequest input = new StudentRegisterRequest(null, "xxx", "pwd", "simone", "tondo", "t001,", LocalDate.of(2025, 10, 10));
-            Student existingStudent = new Student(null ,  null, "xxx", "xxx", "t001", null, null, null);
+            Student existingStudent = new Student(null, null, "xxx", "xxx", "t001", null, null, null);
 
-            when(studentRepositoryMock.findByStuNum("t001")).thenReturn(Optional.of(existingStudent));
+            when(studentRepositoryMock.findByStuNum(input.stuNum())).thenReturn(Optional.of(existingStudent));
 
             //when
 
@@ -222,7 +217,7 @@ class StudentServiceTests {
         void should_SaveStudent_AndEncodePassword() {
             // given
             StudentRegisterRequest input = new StudentRegisterRequest(null, "Simone", "xxx1", "Simone", "Tondo", "T001", LocalDate.of(2025, 10, 12));
-            Student savedStudent = new Student(null , null, "Simone", "xxx1", "Simone", "Tondo", "T001", LocalDate.of(2025, 10, 12));
+            Student savedStudent = new Student(null, null, "Simone", "xxx1", "Simone", "Tondo", "T001", LocalDate.of(2025, 10, 12));
             StudentDTO expectedDTO = new StudentDTO(1, null, "Simone", "Simone", "Tondo", "T001", LocalDate.of(2025, 10, 12));
 
             when(studentRepositoryMock.findByStuNum(anyString())).thenReturn(Optional.empty());
@@ -248,7 +243,7 @@ class StudentServiceTests {
         void should_SaveStudent_WhenValidDto() {
             // given
             StudentRegisterRequest input = new StudentRegisterRequest(null, "Flavio", null, null, null, "T001", null);
-            Student savedStudent = new Student(null , null, "Flavio", null, null, null, "T001", null);
+            Student savedStudent = new Student(null, null, "Flavio", null, null, null, "T001", null);
             StudentDTO expectedDTO = new StudentDTO(1, null, "Flavio", null, null, "T001", null);
 
             // when
@@ -274,7 +269,7 @@ class StudentServiceTests {
         void should_ThrowException_WhenEmailDuplicated() {
             // given
             StudentRegisterRequest input = new StudentRegisterRequest("tr.simone@gmail.com", "Flavio", null, null, null, "T001", null);
-            Student existingStudent = new Student(null , "tr.simone@gmail.com", "Lorenzo", null, null, null, "T001", null);
+            Student existingStudent = new Student(null, "tr.simone@gmail.com", "Lorenzo", null, null, null, "T001", null);
 
             // when
 
@@ -286,6 +281,20 @@ class StudentServiceTests {
             verify(studentRepositoryMock, never()).save(any());
 
         }
+
+        @Test
+        void should_ThrowException_WhenUsernameDuplicated() {
+            //given
+            StudentRegisterRequest input = new StudentRegisterRequest(null, "simone", null, null, null, null, null);
+            Student stud = new Student();
+            stud.setUsername("simone");
+
+            //when
+            when(studentRepositoryMock.findByUsername(input.username())).thenReturn(Optional.of(stud));
+            //then
+            assertThrows(DuplicateResourceException.class, () -> studentServiceImpl.saveStudent(input));
+            verify(studentRepositoryMock, never()).save(any());
+        }
     }
 
     @Nested
@@ -294,14 +303,17 @@ class StudentServiceTests {
         @Test
         void should_UpdateStudent_WhenStudentExist() {
             // given
-            StudentDTO input = new StudentDTO(1, null, "Simone", "TondoModificato", null, null, null); // contiene i dati che
+            StudentDTO input = new StudentDTO(1, "tr.simone@gmail.com", "Simone", "TondoModificato", null, "T001", null); // contiene i dati che
             // vogliamo modificare
 
-            Student existingStudent = new Student(null , null, "Enrico", null, null, null, null, null); // oggetto salvato
+            Student existingStudent = new Student(null, null, "Enrico", null, null, null, null, null); // oggetto salvato
             // attualmente
             // nel db esistente
 
-            when(studentRepositoryMock.findById(1)).thenReturn(Optional.of(existingStudent)); // quando viene chiamato
+            when(studentRepositoryMock.findById(1)).thenReturn(Optional.of(existingStudent));
+            when(studentRepositoryMock.findByEmail("tr.simone@gmail.com")).thenReturn(Optional.empty());
+            when(studentRepositoryMock.findByStuNum("T001")).thenReturn(Optional.empty());
+            // quando viene chiamato
             // l'id
             // 1 risponde il db con
             // Existing
@@ -316,9 +328,12 @@ class StudentServiceTests {
             assertEquals(1, result.id());
             assertEquals(input, result);
 
+            verify(studentRepositoryMock, times(1)).findByStuNum("T001");
+            verify(studentRepositoryMock, times(1)).findByEmail("tr.simone@gmail.com");
             verify(studentRepositoryMock).save(existingStudent);
 
         }
+
 
         @Test
         void should_ThrowDuplicateResourceException_WhenChangingEmailButIsUsed() {
@@ -326,9 +341,9 @@ class StudentServiceTests {
             Integer id = 1;
             StudentDTO input = new StudentDTO(id, "trdario@gmail.com", "user", "name", "lastname", "T001", LocalDate.of(2025, 10, 12)
             );
-            Student existing = new Student(null , "tr.simone@gmail.com", null, null, null, null, null, LocalDate.of(2025, 10, 12));
+            Student existing = new Student(null, "tr.simone@gmail.com", null, null, null, null, null, LocalDate.of(2025, 10, 12));
             existing.setId(1);
-            Student duplicated = new Student(null , "trdario@gmail.com", null, null, null, null, null, LocalDate.of(2025, 10, 12));
+            Student duplicated = new Student(null, "trdario@gmail.com", null, null, null, null, null, LocalDate.of(2025, 10, 12));
             duplicated.setId(2);
 
             when(studentRepositoryMock.findById(1)).thenReturn(Optional.of(existing));
@@ -345,6 +360,44 @@ class StudentServiceTests {
         }
 
 
+        @Test
+        void should_ThrowDuplicateResourceException_WhenChangingStuNumButIsUsed() {
+            //given
+            Integer id = 1;
+            StudentDTO input = new StudentDTO(id, null, null, null, null, "T001", null);
+            Student existing = new Student();
+            existing.setId(1);
+            Student duplicated = new Student();
+            duplicated.setId(2);
+            duplicated.setStuNum("T001");
+
+
+            //when
+            when(studentRepositoryMock.findById(1)).thenReturn(Optional.of(existing));
+            when(studentRepositoryMock.findByStuNum("T001")).thenReturn(Optional.of(duplicated));
+
+            //then
+            assertThrows(DuplicateResourceException.class, () -> studentServiceImpl.updateStudent(input.id(), input));
+            verify(studentRepositoryMock, never()).save(any());
+        }
+
+        @Test
+        void should_NotThrowException_WhenEmailSameStudent() {
+            //given
+            Integer id = 1;
+            StudentDTO input = new StudentDTO(id, "tr.simone@gmail.com", null, null, null, "T001", null);
+            Student existing = new Student();
+            existing.setId(1);
+
+            //when
+            when(studentRepositoryMock.findById(input.id())).thenReturn(Optional.of(existing));
+            when(studentRepositoryMock.findByStuNum(input.stuNum())).thenReturn(Optional.of(existing));
+            when(studentRepositoryMock.findByEmail(input.email())).thenReturn(Optional.of(existing));
+
+            //then
+            // verifichiamo che effettivamente entra dentro il filter e non scatena l'eccezione
+            assertDoesNotThrow(() -> studentServiceImpl.updateStudent(id, input));
+        }
 
         @Test
         void should_ThrowException_WhenIdNotExist() {
@@ -362,6 +415,7 @@ class StudentServiceTests {
 
         }
     }
+
 
     // non funziona il test perchè giustamente non utilizzo il mapper ma utilizzo
     // quello manuale nella classe student

@@ -23,5 +23,7 @@ services:
 networks:
   net-scuola:
     external: true
+    # external true = utilizzata quando hai diversi docker-compose che devono comunicare tra di loro
+    #                 eviti che la rete venga cancellata quando spegni il container
 
 # docker network create net-scuola - abbiamo creato la rete scuola in tutti li ambienti, cosi' possono comunicare e vedersi tra di loro

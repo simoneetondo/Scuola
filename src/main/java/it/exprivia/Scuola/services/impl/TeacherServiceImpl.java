@@ -105,6 +105,12 @@ public class TeacherServiceImpl implements ITeacher {
         Teacher teach = repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utente con id: " + id + "non trovato"));
 
+        repo.findByEmail(newTeach.email())
+                .filter(t -> !t.getId().equals(id))
+                        .ifPresent(t -> {
+                            throw new DuplicateResourceException("Email " + newTeach.email() + " già esistente");
+                        });
+
         // metodo con il mapper
         mapper.updateTeacherFromDTO(newTeach, teach);
 //        teach.setFirstName(newTeach.firstName());

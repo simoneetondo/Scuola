@@ -2,6 +2,7 @@ package it.exprivia.Scuola.services.impl;
 
 import java.util.List;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class StudentServiceImpl implements IStudent {
 //    }
 
     // bisogna utilizzare il mapper se lo si vuole utilizzare anche nei test
+
 
     @Override
     public List<StudentDTO> getStudents() {
@@ -103,6 +105,7 @@ public class StudentServiceImpl implements IStudent {
         return mapper.toDTO(student);
     }
 
+
     // SOFT_DELETE? per i casi di scuola è utile una volta eliminato uno studente
     // avere in memoria i voti o esami a lui annessi
     @Override
@@ -134,7 +137,8 @@ public class StudentServiceImpl implements IStudent {
                 });
 
         repo.findByStuNum(newStudent.stuNum())
-                .filter(s -> !s.getId().equals(id))
+                .filter(s -> !s.getId().equals(id)) // cicliamo tra tutti gli studenti, e prendiamo lo studente solo
+                                                            // se l'id  è diverso da quello inserito inizialmente
                 .ifPresent(s -> {
                     throw new DuplicateResourceException("Identificativo " + newStudent.stuNum() + " già presente.");
                 });

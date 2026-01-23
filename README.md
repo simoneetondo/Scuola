@@ -138,4 +138,9 @@ OGGETTO PERSON IN USER E SETTARE MEGLIO RUOLI E PERMESSI
 - capire cosa fare, se posso continuare in questo modo o c'è qualcosa in particoalre
 
 
+- CRITERIA CLASSE 
+- 
+medium, baldung, baldabung
+controllare if lambda per fare 100% testing
+
 

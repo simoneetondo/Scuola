@@ -1,5 +1,5 @@
 // java
-package it.exprivia.Scuola;
+package it.exprivia.Scuola.unit.service;
 
 import it.exprivia.Scuola.exception.UnauthorizedException;
 import it.exprivia.Scuola.mapper.StudentMapper;
@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -78,6 +79,21 @@ public class AuthServiceTests {
 
     }
 
+    @Test
+    void should_GenerateToken_WhenLoginSuccessful() {
+        //given
+        Student stud = new Student();
+        stud.setUsername("simonetta");
+        stud.setPassword("encodedPassword");
+        LoginRequest loginRequest = new LoginRequest("simonetta", "loreta123");
+        //when
+        when(studentRepo.findByUsername(anyString())).thenReturn(Optional.of(stud));
+        when(passwordEncoder.matches( "loreta123", "encodedPassword")).thenReturn(true);
+        when(jwtService.generateToken( anyString(), anyString() )).thenReturn("mocked-jwt-token");
+        authService.login(loginRequest);
+        //then
+        verify(jwtService, times(1)).generateToken( anyString(), anyString());
+    }
 
 
 

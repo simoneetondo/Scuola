@@ -5,6 +5,7 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.models.annotations.OpenAPI30;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/students")
+@Tag(name="studenti", description="Operazioni relative agli studenti")
 public class StudentController {
 
     @Autowired
@@ -78,10 +80,12 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
+
     @Operation(
             summary = "Crea un nuovo studente",
             description = "Crea un nuovo studente nel sistema con i dettagli forniti"
     )
+
     // CREATE
     @PostMapping("")
     @PreAuthorize("hasRole('STUDENT')")
@@ -89,7 +93,14 @@ public class StudentController {
         StudentDTO createdStudent = service.saveStudent(stud);
         return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
     }
-    
+
+    @Operation(
+            summary = "Aggiorna uno studente esistente",
+            description = "Aggiorna i dettagli di uno studente specifico utilizzando il suo ID univoco"
+    )
+    @ApiResponse(responseCode = "200", description = "Studente aggiornato con successo")
+    @ApiResponse(responseCode = "404", description = "Studente non trovato")
+    @ApiResponse(responseCode = "409", description = "Conflitto durante l'aggiornamento dello studente")
     // UPDATE 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('STUDENT')")
